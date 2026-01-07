@@ -329,7 +329,6 @@ struct DisplaySection: View {
 
             // Temperature unit
             HStack {
-                Text("Temperature")
                 Spacer()
                 Picker("Temperature", selection: $settings.temperatureUnit) {
                     ForEach(TemperatureUnit.allCases) { unit in
@@ -342,7 +341,6 @@ struct DisplaySection: View {
 
             // Pressure unit
             HStack {
-                Text("Pressure")
                 Spacer()
                 Picker("Pressure", selection: $settings.pressureUnit) {
                     ForEach(PressureUnit.allCases) { unit in

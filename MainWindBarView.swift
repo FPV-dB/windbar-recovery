@@ -476,7 +476,9 @@ struct HourlyRow: View {
 
 struct ExternalLinksSection: View {
 
+    @EnvironmentObject var manager: WeatherManager
     @State private var showProPilots = false
+    @State private var showICAOList = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -488,8 +490,19 @@ struct ExternalLinksSection: View {
                 .foregroundColor(.secondary)
 
             HStack(spacing: 16) {
-                LinkButton(title: "Open in The Weather Channel", icon: "link")
-                LinkButton(title: "Australian ICAO List", icon: "list.bullet")
+                LinkButton(title: "Open in The Weather Channel", icon: "link") {
+                    openWeatherChannel()
+                }
+                Button(action: {
+                    showICAOList = true
+                }) {
+                    HStack {
+                        Image(systemName: "list.bullet")
+                        Text("Australian ICAO List")
+                            .lineLimit(1)
+                    }
+                }
+                .buttonStyle(.link)
             }
 
             Text("Australian Airspace - official sources")
@@ -501,11 +514,11 @@ struct ExternalLinksSection: View {
                 .foregroundColor(.secondary)
 
             VStack(alignment: .leading, spacing: 8) {
-                LinkButton(title: "Open AIP", icon: "link")
-                LinkButton(title: "Open NAIPS (NOTAMs/Briefing) — paid service", icon: "link")
-                LinkButton(title: "Open CASA RPAS Gui...", icon: "link")
-                LinkButton(title: "BOM Weather", icon: "link")
-                LinkButton(title: "Weatherzone Radar", icon: "link")
+                LinkButton(title: "Open AIP", icon: "link", url: "https://www.airservicesaustralia.com/aip")
+                LinkButton(title: "Open NAIPS (NOTAMs/Briefing) — paid service", icon: "link", url: nil)
+                LinkButton(title: "Open CASA RPAS Gui...", icon: "link", url: nil)
+                LinkButton(title: "BOM Weather", icon: "link", url: nil)
+                LinkButton(title: "Weatherzone Radar", icon: "link", url: nil)
             }
 
             Text("disclaimer: Airspace and NOTAMs change frequently. Always check official sources before flight.")
@@ -514,8 +527,8 @@ struct ExternalLinksSection: View {
                 .padding(.top, 4)
 
             HStack(spacing: 16) {
-                LinkButton(title: "ICAO Lookup", icon: "magnifyingglass")
-                LinkButton(title: "FlightAware", icon: "airplane")
+                LinkButton(title: "ICAO Lookup", icon: "magnifyingglass", url: nil)
+                LinkButton(title: "FlightAware", icon: "airplane", url: nil)
             }
 
             // Pro Pilots Button
@@ -532,6 +545,26 @@ struct ExternalLinksSection: View {
             .sheet(isPresented: $showProPilots) {
                 ProPilotsView()
             }
+            .sheet(isPresented: $showICAOList) {
+                AustralianICAOView()
+            }
+        }
+    }
+
+    private func openWeatherChannel() {
+        var urlString = "https://weather.com/weather/today/l/"
+
+        if let lat = manager.latitude, let lon = manager.longitude {
+            // Use coordinates format: weather.com/weather/today/l/LAT,LON
+            urlString += String(format: "%.4f,%.4f", lat, lon)
+        } else {
+            // Fallback to city name if coordinates not available
+            let city = manager.cityName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "Adelaide"
+            urlString += city
+        }
+
+        if let url = URL(string: urlString) {
+            NSWorkspace.shared.open(url)
         }
     }
 }
@@ -539,9 +572,31 @@ struct ExternalLinksSection: View {
 struct LinkButton: View {
     let title: String
     let icon: String
+    let url: String?
+    var customAction: (() -> Void)?
+
+    init(title: String, icon: String, url: String?) {
+        self.title = title
+        self.icon = icon
+        self.url = url
+        self.customAction = nil
+    }
+
+    init(title: String, icon: String, customAction: @escaping () -> Void) {
+        self.title = title
+        self.icon = icon
+        self.url = nil
+        self.customAction = customAction
+    }
 
     var body: some View {
-        Button(action: {}) {
+        Button(action: {
+            if let action = customAction {
+                action()
+            } else if let urlString = url, let url = URL(string: urlString) {
+                NSWorkspace.shared.open(url)
+            }
+        }) {
             HStack {
                 Image(systemName: icon)
                 Text(title)

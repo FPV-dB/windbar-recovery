@@ -281,6 +281,7 @@ struct DisplaySection: View {
 
     @EnvironmentObject var manager: WeatherManager
     @EnvironmentObject var settings: AppSettings
+    @State private var showWindLimits = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -339,14 +340,20 @@ struct DisplaySection: View {
                 .frame(width: 240)
             }
 
-            // Recommended wind limits (placeholder)
-            Button(action: {}) {
+            // Recommended wind limits
+            Button(action: {
+                showWindLimits = true
+            }) {
                 HStack {
                     Image(systemName: "info.circle")
                     Text("Recommended wind limits")
                 }
             }
             .buttonStyle(.link)
+            .sheet(isPresented: $showWindLimits) {
+                DroneWindLimitsView()
+                    .environmentObject(manager)
+            }
 
             // Dummy data toggle
             Toggle("Use dummy data", isOn: $manager.useDummyData)

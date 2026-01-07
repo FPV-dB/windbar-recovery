@@ -170,32 +170,65 @@ final class WeatherManager: NSObject, ObservableObject {
 
     // Countries + cities
     let cityList: [String: [String]] = [
-        "Australia": ["Adelaide","Melbourne","Sydney","Perth","Brisbane","Hobart","Darwin","Canberra","Gold Coast","Newcastle","Wollongong","Cairns","Townsville","Geelong"],
-        "New Zealand": ["Auckland","Wellington","Christchurch","Hamilton","Tauranga","Dunedin","Queenstown","Rotorua"],
-        "USA": ["New York","Los Angeles","Chicago","San Francisco","Seattle","Miami","Houston","Dallas","Boston","Denver","Atlanta","Phoenix","Philadelphia","Portland","Austin","Las Vegas"],
-        "UK": ["London","Manchester","Liverpool","Birmingham","Edinburgh","Glasgow","Bristol","Leeds","Sheffield","Cardiff","Belfast","Newcastle"],
-        "Canada": ["Toronto","Vancouver","Montreal","Calgary","Ottawa","Edmonton","Winnipeg","Quebec City","Halifax","Victoria"],
-        "Germany": ["Berlin","Hamburg","Munich","Frankfurt","Cologne","Stuttgart","Düsseldorf","Dortmund","Leipzig"],
-        "France": ["Paris","Lyon","Marseille","Nice","Bordeaux","Toulouse","Strasbourg","Nantes","Lille"],
-        "Japan": ["Tokyo","Osaka","Kyoto","Nagoya","Sapporo","Fukuoka","Yokohama","Kobe","Hiroshima"],
-        "Spain": ["Madrid","Barcelona","Valencia","Seville","Bilbao","Málaga","Granada","Alicante"],
-        "Italy": ["Rome","Milan","Naples","Turin","Florence","Venice","Bologna","Palermo"],
-        "Netherlands": ["Amsterdam","Rotterdam","The Hague","Utrecht","Eindhoven","Groningen","Maastricht"],
-        "Switzerland": ["Zurich","Geneva","Basel","Bern","Lausanne","Lucerne","Interlaken"],
-        "Norway": ["Oslo","Bergen","Trondheim","Stavanger","Tromsø","Kristiansand"],
-        "Sweden": ["Stockholm","Gothenburg","Malmö","Uppsala","Västerås","Örebro"],
-        "Denmark": ["Copenhagen","Aarhus","Odense","Aalborg","Esbjerg"],
-        "Ireland": ["Dublin","Cork","Galway","Limerick","Waterford"],
-        "South Korea": ["Seoul","Busan","Incheon","Daegu","Daejeon","Gwangju"],
-        "China": ["Beijing","Shanghai","Guangzhou","Shenzhen","Chengdu","Hong Kong","Hangzhou","Xi'an"],
+        "Australia": ["Adelaide","Melbourne","Sydney","Perth","Brisbane","Hobart","Darwin","Canberra","Gold Coast","Newcastle","Wollongong","Cairns","Townsville","Geelong","Launceston","Albury","Ballarat","Bendigo","Mackay","Rockhampton"],
+        "New Zealand": ["Auckland","Wellington","Christchurch","Hamilton","Tauranga","Dunedin","Queenstown","Rotorua","Napier","Nelson","Palmerston North","Invercargill"],
+        "USA": ["New York","Los Angeles","Chicago","San Francisco","Seattle","Miami","Houston","Dallas","Boston","Denver","Atlanta","Phoenix","Philadelphia","Portland","Austin","Las Vegas","San Diego","San Jose","Detroit","Minneapolis","Tampa","Orlando","Charlotte","Nashville","Salt Lake City","Honolulu","Anchorage"],
+        "UK": ["London","Manchester","Liverpool","Birmingham","Edinburgh","Glasgow","Bristol","Leeds","Sheffield","Cardiff","Belfast","Newcastle","Nottingham","Southampton","Leicester","Brighton","Aberdeen","Cambridge","Oxford","York","Norwich"],
+        "Canada": ["Toronto","Vancouver","Montreal","Calgary","Ottawa","Edmonton","Winnipeg","Quebec City","Halifax","Victoria","Saskatoon","Regina","Kelowna","Thunder Bay","Whitehorse","Yellowknife"],
+        "Germany": ["Berlin","Hamburg","Munich","Frankfurt","Cologne","Stuttgart","Düsseldorf","Dortmund","Leipzig","Dresden","Nuremberg","Hanover","Bremen","Heidelberg","Freiburg"],
+        "France": ["Paris","Lyon","Marseille","Nice","Bordeaux","Toulouse","Strasbourg","Nantes","Lille","Rennes","Grenoble","Montpellier","Cannes","Biarritz","Chamonix"],
+        "Japan": ["Tokyo","Osaka","Kyoto","Nagoya","Sapporo","Fukuoka","Yokohama","Kobe","Hiroshima","Sendai","Nara","Okinawa","Kamakura","Takayama"],
+        "Spain": ["Madrid","Barcelona","Valencia","Seville","Bilbao","Málaga","Granada","Alicante","Zaragoza","Palma","San Sebastian","Córdoba","Toledo","Salamanca"],
+        "Italy": ["Rome","Milan","Naples","Turin","Florence","Venice","Bologna","Palermo","Genoa","Verona","Pisa","Siena","Como","Rimini","Sorrento"],
+        "Netherlands": ["Amsterdam","Rotterdam","The Hague","Utrecht","Eindhoven","Groningen","Maastricht","Haarlem","Leiden","Delft"],
+        "Switzerland": ["Zurich","Geneva","Basel","Bern","Lausanne","Lucerne","Interlaken","Zermatt","St. Moritz","Lugano"],
+        "Norway": ["Oslo","Bergen","Trondheim","Stavanger","Tromsø","Kristiansand","Ålesund","Bodø","Drammen"],
+        "Sweden": ["Stockholm","Gothenburg","Malmö","Uppsala","Västerås","Örebro","Lund","Umeå","Helsingborg"],
+        "Denmark": ["Copenhagen","Aarhus","Odense","Aalborg","Esbjerg","Roskilde","Kolding"],
+        "Ireland": ["Dublin","Cork","Galway","Limerick","Waterford","Killarney","Kilkenny","Derry"],
+        "South Korea": ["Seoul","Busan","Incheon","Daegu","Daejeon","Gwangju","Ulsan","Jeju","Suwon"],
+        "China": ["Beijing","Shanghai","Guangzhou","Shenzhen","Chengdu","Hong Kong","Hangzhou","Xi'an","Wuhan","Chongqing","Tianjin","Nanjing","Suzhou","Macau"],
         "Singapore": ["Singapore"],
-        "Thailand": ["Bangkok","Chiang Mai","Phuket","Pattaya","Krabi"],
-        "India": ["Mumbai","Delhi","Bangalore","Hyderabad","Chennai","Kolkata","Pune","Ahmedabad"],
-        "UAE": ["Dubai","Abu Dhabi","Sharjah","Ajman"],
-        "South Africa": ["Cape Town","Johannesburg","Durban","Pretoria","Port Elizabeth"],
-        "Brazil": ["São Paulo","Rio de Janeiro","Brasília","Salvador","Fortaleza","Belo Horizonte"],
-        "Argentina": ["Buenos Aires","Córdoba","Rosario","Mendoza","Mar del Plata"],
-        "Mexico": ["Mexico City","Guadalajara","Monterrey","Cancún","Tijuana","Puebla"]
+        "Thailand": ["Bangkok","Chiang Mai","Phuket","Pattaya","Krabi","Koh Samui","Hua Hin","Ayutthaya"],
+        "India": ["Mumbai","Delhi","Bangalore","Hyderabad","Chennai","Kolkata","Pune","Ahmedabad","Jaipur","Goa","Kochi","Chandigarh"],
+        "UAE": ["Dubai","Abu Dhabi","Sharjah","Ajman","Ras Al Khaimah","Fujairah"],
+        "South Africa": ["Cape Town","Johannesburg","Durban","Pretoria","Port Elizabeth","Bloemfontein","Kimberley","Knysna"],
+        "Brazil": ["São Paulo","Rio de Janeiro","Brasília","Salvador","Fortaleza","Belo Horizonte","Manaus","Curitiba","Porto Alegre","Recife"],
+        "Argentina": ["Buenos Aires","Córdoba","Rosario","Mendoza","Mar del Plata","Salta","Bariloche","Ushuaia"],
+        "Mexico": ["Mexico City","Guadalajara","Monterrey","Cancún","Tijuana","Puebla","Playa del Carmen","Puerto Vallarta","Oaxaca","Mérida"],
+        "Austria": ["Vienna","Salzburg","Innsbruck","Graz","Linz","Hallstatt"],
+        "Belgium": ["Brussels","Antwerp","Bruges","Ghent","Leuven","Liège"],
+        "Poland": ["Warsaw","Kraków","Gdańsk","Wrocław","Poznań","Łódź"],
+        "Czech Republic": ["Prague","Brno","Ostrava","Plzeň","Karlovy Vary"],
+        "Portugal": ["Lisbon","Porto","Faro","Coimbra","Madeira","Azores"],
+        "Greece": ["Athens","Thessaloniki","Santorini","Mykonos","Crete","Rhodes"],
+        "Turkey": ["Istanbul","Ankara","Izmir","Antalya","Bodrum","Cappadocia"],
+        "Russia": ["Moscow","St. Petersburg","Vladivostok","Sochi","Yekaterinburg","Kazan"],
+        "Finland": ["Helsinki","Tampere","Turku","Oulu","Rovaniemi","Espoo"],
+        "Iceland": ["Reykjavik","Akureyri","Keflavik","Vik"],
+        "Croatia": ["Zagreb","Split","Dubrovnik","Pula","Zadar"],
+        "Hungary": ["Budapest","Debrecen","Szeged","Pécs"],
+        "Romania": ["Bucharest","Cluj-Napoca","Timișoara","Brașov"],
+        "Israel": ["Tel Aviv","Jerusalem","Haifa","Eilat"],
+        "Egypt": ["Cairo","Alexandria","Luxor","Aswan","Sharm el-Sheikh"],
+        "Morocco": ["Marrakech","Casablanca","Fez","Rabat","Tangier"],
+        "Kenya": ["Nairobi","Mombasa","Kisumu","Nakuru"],
+        "Nigeria": ["Lagos","Abuja","Kano","Ibadan","Port Harcourt"],
+        "Vietnam": ["Hanoi","Ho Chi Minh City","Da Nang","Hoi An","Nha Trang"],
+        "Indonesia": ["Jakarta","Bali","Surabaya","Bandung","Yogyakarta"],
+        "Malaysia": ["Kuala Lumpur","Penang","Johor Bahru","Malacca","Langkawi"],
+        "Philippines": ["Manila","Cebu","Davao","Boracay","Palawan"],
+        "Taiwan": ["Taipei","Kaohsiung","Taichung","Tainan","Hualien"],
+        "Chile": ["Santiago","Valparaíso","Viña del Mar","Punta Arenas","Atacama"],
+        "Peru": ["Lima","Cusco","Arequipa","Machu Picchu"],
+        "Colombia": ["Bogotá","Medellín","Cartagena","Cali","Barranquilla"],
+        "Costa Rica": ["San José","Tamarindo","Monteverde","Puerto Viejo"],
+        "Panama": ["Panama City","Bocas del Toro","Boquete"],
+        "Qatar": ["Doha","Al Wakrah"],
+        "Saudi Arabia": ["Riyadh","Jeddah","Mecca","Medina"],
+        "Pakistan": ["Karachi","Lahore","Islamabad","Peshawar"],
+        "Bangladesh": ["Dhaka","Chittagong","Sylhet"],
+        "Sri Lanka": ["Colombo","Kandy","Galle","Jaffna"]
     ]
 
     override init() {
@@ -260,33 +293,66 @@ final class WeatherManager: NSObject, ObservableObject {
 
     func flagEmoji(for country: String) -> String {
         switch country {
-        case "Australia":    return "🇦🇺"
-        case "New Zealand":  return "🇳🇿"
-        case "USA":          return "🇺🇸"
-        case "UK":           return "🇬🇧"
-        case "Canada":       return "🇨🇦"
-        case "Germany":      return "🇩🇪"
-        case "France":       return "🇫🇷"
-        case "Japan":        return "🇯🇵"
-        case "Spain":        return "🇪🇸"
-        case "Italy":        return "🇮🇹"
-        case "Netherlands":  return "🇳🇱"
-        case "Switzerland":  return "🇨🇭"
-        case "Norway":       return "🇳🇴"
-        case "Sweden":       return "🇸🇪"
-        case "Denmark":      return "🇩🇰"
-        case "Ireland":      return "🇮🇪"
-        case "South Korea":  return "🇰🇷"
-        case "China":        return "🇨🇳"
-        case "Singapore":    return "🇸🇬"
-        case "Thailand":     return "🇹🇭"
-        case "India":        return "🇮🇳"
-        case "UAE":          return "🇦🇪"
-        case "South Africa": return "🇿🇦"
-        case "Brazil":       return "🇧🇷"
-        case "Argentina":    return "🇦🇷"
-        case "Mexico":       return "🇲🇽"
-        default:             return ""
+        case "Australia":       return "🇦🇺"
+        case "New Zealand":     return "🇳🇿"
+        case "USA":             return "🇺🇸"
+        case "UK":              return "🇬🇧"
+        case "Canada":          return "🇨🇦"
+        case "Germany":         return "🇩🇪"
+        case "France":          return "🇫🇷"
+        case "Japan":           return "🇯🇵"
+        case "Spain":           return "🇪🇸"
+        case "Italy":           return "🇮🇹"
+        case "Netherlands":     return "🇳🇱"
+        case "Switzerland":     return "🇨🇭"
+        case "Norway":          return "🇳🇴"
+        case "Sweden":          return "🇸🇪"
+        case "Denmark":         return "🇩🇰"
+        case "Ireland":         return "🇮🇪"
+        case "South Korea":     return "🇰🇷"
+        case "China":           return "🇨🇳"
+        case "Singapore":       return "🇸🇬"
+        case "Thailand":        return "🇹🇭"
+        case "India":           return "🇮🇳"
+        case "UAE":             return "🇦🇪"
+        case "South Africa":    return "🇿🇦"
+        case "Brazil":          return "🇧🇷"
+        case "Argentina":       return "🇦🇷"
+        case "Mexico":          return "🇲🇽"
+        case "Austria":         return "🇦🇹"
+        case "Belgium":         return "🇧🇪"
+        case "Poland":          return "🇵🇱"
+        case "Czech Republic":  return "🇨🇿"
+        case "Portugal":        return "🇵🇹"
+        case "Greece":          return "🇬🇷"
+        case "Turkey":          return "🇹🇷"
+        case "Russia":          return "🇷🇺"
+        case "Finland":         return "🇫🇮"
+        case "Iceland":         return "🇮🇸"
+        case "Croatia":         return "🇭🇷"
+        case "Hungary":         return "🇭🇺"
+        case "Romania":         return "🇷🇴"
+        case "Israel":          return "🇮🇱"
+        case "Egypt":           return "🇪🇬"
+        case "Morocco":         return "🇲🇦"
+        case "Kenya":           return "🇰🇪"
+        case "Nigeria":         return "🇳🇬"
+        case "Vietnam":         return "🇻🇳"
+        case "Indonesia":       return "🇮🇩"
+        case "Malaysia":        return "🇲🇾"
+        case "Philippines":     return "🇵🇭"
+        case "Taiwan":          return "🇹🇼"
+        case "Chile":           return "🇨🇱"
+        case "Peru":            return "🇵🇪"
+        case "Colombia":        return "🇨🇴"
+        case "Costa Rica":      return "🇨🇷"
+        case "Panama":          return "🇵🇦"
+        case "Qatar":           return "🇶🇦"
+        case "Saudi Arabia":    return "🇸🇦"
+        case "Pakistan":        return "🇵🇰"
+        case "Bangladesh":      return "🇧🇩"
+        case "Sri Lanka":       return "🇱🇰"
+        default:                return ""
         }
     }
 

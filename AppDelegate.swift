@@ -18,14 +18,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // --- Create menu ---
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Open WindBar", action: #selector(openMainWindow), keyEquivalent: ""))
+
+        let openItem = NSMenuItem(title: "Open WindBar", action: #selector(openMainWindow), keyEquivalent: "")
+        openItem.target = self
+        menu.addItem(openItem)
         menu.addItem(NSMenuItem.separator())
 
         let iconStyleItem = NSMenuItem(title: "Icon Style", action: nil, keyEquivalent: "")
         let iconSubmenu = NSMenu()
-        iconSubmenu.addItem(NSMenuItem(title: "Wind + Arrow", action: #selector(setIconStyleWindAndArrow), keyEquivalent: ""))
-        iconSubmenu.addItem(NSMenuItem(title: "Arrow Only", action: #selector(setIconStyleArrowOnly), keyEquivalent: ""))
-        iconSubmenu.addItem(NSMenuItem(title: "Wind Only", action: #selector(setIconStyleWindOnly), keyEquivalent: ""))
+
+        let windAndArrowItem = NSMenuItem(title: "Wind + Arrow", action: #selector(setIconStyleWindAndArrow), keyEquivalent: "")
+        windAndArrowItem.target = self
+        iconSubmenu.addItem(windAndArrowItem)
+
+        let arrowOnlyItem = NSMenuItem(title: "Arrow Only", action: #selector(setIconStyleArrowOnly), keyEquivalent: "")
+        arrowOnlyItem.target = self
+        iconSubmenu.addItem(arrowOnlyItem)
+
+        let windOnlyItem = NSMenuItem(title: "Wind Only", action: #selector(setIconStyleWindOnly), keyEquivalent: "")
+        windOnlyItem.target = self
+        iconSubmenu.addItem(windOnlyItem)
+
         iconStyleItem.submenu = iconSubmenu
         menu.addItem(iconStyleItem)
 

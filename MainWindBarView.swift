@@ -452,6 +452,8 @@ struct HourlyRow: View {
 
 struct ExternalLinksSection: View {
 
+    @State private var showProPilots = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("External links")
@@ -490,6 +492,21 @@ struct ExternalLinksSection: View {
             HStack(spacing: 16) {
                 LinkButton(title: "ICAO Lookup", icon: "magnifyingglass")
                 LinkButton(title: "FlightAware", icon: "airplane")
+            }
+
+            // Pro Pilots Button
+            Button(action: {
+                showProPilots = true
+            }) {
+                HStack {
+                    Image(systemName: "play.circle")
+                    Text("Pro pilots I recommend")
+                }
+            }
+            .buttonStyle(.link)
+            .padding(.top, 8)
+            .sheet(isPresented: $showProPilots) {
+                ProPilotsView()
             }
         }
     }

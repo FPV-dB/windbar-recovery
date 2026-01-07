@@ -114,6 +114,8 @@ class AppSettings: ObservableObject {
         didSet { pressureUnitRaw = pressureUnit.rawValue }
     }
 
+    @AppStorage("showKnotsAlways") var showKnotsAlways: Bool = false
+
     // Load saved values on init
     init() {
         if let saved = IconStyle(rawValue: iconStyleRaw) {
@@ -158,5 +160,27 @@ class AppSettings: ObservableObject {
     func pressureString(_ hPa: Double?) -> String {
         guard let pressure = convertPressure(hPa) else { return "—" }
         return String(format: "%.0f %@", pressure, pressureUnit.displayName)
+    }
+
+    // Convert km/h to knots
+    func windSpeedInKnots(_ kmh: Double) -> Double {
+        return kmh * 0.539957
+    }
+
+    // Convert wind speed from any unit to knots
+    func convertToKnots(_ speed: Double, from unit: WindUnit) -> Double {
+        // First convert to km/h, then to knots
+        let kmh: Double
+        switch unit {
+        case .kmh:
+            kmh = speed
+        case .mph:
+            kmh = speed / 0.621371
+        case .ms:
+            kmh = speed * 3.6
+        case .knots:
+            return speed  // Already in knots
+        }
+        return kmh * 0.539957
     }
 }

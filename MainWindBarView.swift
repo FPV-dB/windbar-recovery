@@ -106,6 +106,16 @@ struct CurrentWeatherSection: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                // Show knots if enabled
+                if settings.showKnotsAlways && manager.windUnit != .knots {
+                    HStack(spacing: 8) {
+                        Image(systemName: "wind")
+                            .foregroundColor(.clear)
+                        Text(String(format: "(%.1f knots)", settings.windSpeedInKnots(speed)))
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
 
             // Gusts
@@ -121,6 +131,16 @@ struct CurrentWeatherSection: View {
                     Text(String(format: "%.1f %@ %@", gust, manager.windUnit.displayName, compass))
                 }
                 .font(.body)
+                // Show knots if enabled
+                if settings.showKnotsAlways && manager.windUnit != .knots {
+                    HStack(spacing: 8) {
+                        Image(systemName: "wind.snow")
+                            .foregroundColor(.clear)
+                        Text(String(format: "(%.1f knots)", settings.windSpeedInKnots(gust)))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
 
             // Temperature
@@ -364,6 +384,9 @@ struct DisplaySection: View {
             // Dummy data toggle
             Toggle("Use dummy data", isOn: $manager.useDummyData)
 
+            // Show knots always toggle
+            Toggle("Always show wind in knots", isOn: $settings.showKnotsAlways)
+
             // Auto-refresh
             HStack {
                 Text("Auto-refresh:")
@@ -416,41 +439,68 @@ struct HourlyRow: View {
     let entry: HourlyEntry
 
     var body: some View {
-        HStack(spacing: 12) {
-            // Time
-            Image(systemName: "clock")
-                .foregroundColor(.secondary)
-                .frame(width: 16)
-            Text(entry.label)
-                .font(.system(.body, design: .monospaced))
-                .frame(width: 50, alignment: .leading)
-
-            // Wind icon
-            Image(systemName: "wind")
-                .foregroundColor(.secondary)
-                .frame(width: 16)
-
-            // Wind speed
-            if let speed = entry.windSpeed {
-                Text(String(format: "%.1f %@", speed, manager.windUnit.displayName))
-                    .frame(width: 80, alignment: .leading)
-            }
-
-            // Gust
-            if let gust = entry.windGust, let compass = entry.windDirectionCompass {
-                Text(String(format: "Gusts %.1f %@ %@", gust, manager.windUnit.displayName, compass))
-            }
-
-            Spacer()
-
-            // Pressure
-            if let pressure = entry.pressureHPa {
-                Text(String(format: "· %.0f hPa", pressure))
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 12) {
+                // Time
+                Image(systemName: "clock")
                     .foregroundColor(.secondary)
-                    .font(.caption)
+                    .frame(width: 16)
+                Text(entry.label)
+                    .font(.system(.body, design: .monospaced))
+                    .frame(width: 50, alignment: .leading)
+
+                // Wind icon
+                Image(systemName: "wind")
+                    .foregroundColor(.secondary)
+                    .frame(width: 16)
+
+                // Wind speed
+                if let speed = entry.windSpeed {
+                    Text(String(format: "%.1f %@", speed, manager.windUnit.displayName))
+                        .frame(width: 80, alignment: .leading)
+                }
+
+                // Gust
+                if let gust = entry.windGust, let compass = entry.windDirectionCompass {
+                    Text(String(format: "Gusts %.1f %@ %@", gust, manager.windUnit.displayName, compass))
+                }
+
+                Spacer()
+
+                // Pressure
+                if let pressure = entry.pressureHPa {
+                    Text(String(format: "· %.0f hPa", pressure))
+                        .foregroundColor(.secondary)
+                        .font(.caption)
+                }
+            }
+            .font(.body)
+
+            // Show knots if enabled
+            if settings.showKnotsAlways && manager.windUnit != .knots {
+                HStack(spacing: 12) {
+                    Spacer()
+                        .frame(width: 16)
+                    Spacer()
+                        .frame(width: 50)
+                    Spacer()
+                        .frame(width: 16)
+
+                    if let speed = entry.windSpeed {
+                        Text(String(format: "(%.1f knots", settings.convertToKnots(speed, from: manager.windUnit)))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .frame(width: 80, alignment: .leading)
+                    }
+
+                    if let gust = entry.windGust {
+                        Text(String(format: "· %.1f knots)", settings.convertToKnots(gust, from: manager.windUnit)))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
         }
-        .font(.body)
     }
 }
 

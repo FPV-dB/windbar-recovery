@@ -223,7 +223,7 @@ final class WeatherManager: NSObject, ObservableObject {
         // simple fake hourly
         hourlyForecast = (0..<6).map { i in
             let hour = (Calendar.current.component(.hour, from: Date()) + i) % 24
-            HourlyEntry(
+            return HourlyEntry(
                 label: String(format: "%02d:00", hour),
                 tempC: 24.0 + Double(i) * 0.5,
                 windSpeed: 8.8 + Double(i) * 1.5,

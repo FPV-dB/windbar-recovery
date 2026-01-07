@@ -16,26 +16,34 @@ struct MainWindBarView: View {
 
                 // MARK: - Current Weather Section
                 CurrentWeatherSection()
+                    .environmentObject(manager)
+                    .environmentObject(settings)
 
                 Divider()
 
                 // MARK: - Drone Safety Alert
                 DroneAlertSection()
+                    .environmentObject(settings)
 
                 Divider()
 
                 // MARK: - Location Section
                 LocationSection()
+                    .environmentObject(manager)
 
                 Divider()
 
                 // MARK: - Display Settings
                 DisplaySection()
+                    .environmentObject(manager)
+                    .environmentObject(settings)
 
                 Divider()
 
                 // MARK: - Next Hours
                 NextHoursSection()
+                    .environmentObject(manager)
+                    .environmentObject(settings)
 
                 Divider()
 

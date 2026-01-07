@@ -109,6 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let gust = manager.windGustKmh
         let unit = manager.windUnit.displayName
         let direction = manager.windDirectionDeg
+        let compass = manager.windDirectionCompass
 
         var title = ""
 
@@ -122,8 +123,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if let s = speed {
             title += "\(Int(s)) \(unit)"
+            if let c = compass {
+                title += " \(c)"
+            }
             if let g = gust {
-                title += " — Gusts to \(Int(g)) \(unit)"
+                title += " — Gusts "
+                title += windArrow(for: direction) + " "
+                title += "\(Int(g)) \(unit)"
+                if let c = compass {
+                    title += " \(c)"
+                }
             }
         } else {
             title += "—"

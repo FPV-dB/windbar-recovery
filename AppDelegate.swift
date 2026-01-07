@@ -137,26 +137,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func windArrow(for degrees: Double?) -> String {
-        guard let deg = degrees else { return "↓" }
+        guard let deg = degrees else { return "↑" }
 
-        // Wind direction arrows - arrow points FROM where wind is coming
-        // 0° = North wind (wind FROM north, arrow points down ↓)
-        // 90° = East wind (wind FROM east, arrow points left ←)
-        // 180° = South wind (wind FROM south, arrow points up ↑)
-        // 270° = West wind (wind FROM west, arrow points right →)
+        // Wind direction: arrow points in the direction the wind is FROM
+        // Meteorological convention: 0° = North wind (from North)
+        // 0° = North wind → arrow points North ↑
+        // 90° = East wind → arrow points East →
+        // 180° = South wind → arrow points South ↓
+        // 270° = West wind → arrow points West ←
 
         let normalized = Int(deg) % 360
 
         switch normalized {
-        case 337...360, 0..<23:   return "↓"  // N
-        case 23..<68:             return "↙"  // NE
-        case 68..<113:            return "←"  // E
-        case 113..<158:           return "↖"  // SE
-        case 158..<203:           return "↑"  // S
-        case 203..<248:           return "↗"  // SW
-        case 248..<293:           return "→"  // W
-        case 293..<338:           return "↘"  // NW
-        default:                  return "↓"
+        case 337...360, 0..<23:   return "↑"  // N
+        case 23..<68:             return "↗"  // NE
+        case 68..<113:            return "→"  // E
+        case 113..<158:           return "↘"  // SE
+        case 158..<203:           return "↓"  // S
+        case 203..<248:           return "↙"  // SW
+        case 248..<293:           return "←"  // W
+        case 293..<338:           return "↖"  // NW
+        default:                  return "↑"
         }
     }
 }

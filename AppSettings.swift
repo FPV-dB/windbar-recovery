@@ -13,6 +13,7 @@ enum IconStyle: String, CaseIterable, Identifiable, Codable {
     case windAndArrow = "Wind + Arrow"
     case arrowOnly = "Arrow Only"
     case windOnly = "Wind Only"
+    case compact = "Compact"
 
     var id: String { rawValue }
 }

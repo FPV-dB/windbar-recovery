@@ -39,6 +39,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         windOnlyItem.target = self
         iconSubmenu.addItem(windOnlyItem)
 
+        let compactItem = NSMenuItem(title: "Compact", action: #selector(setIconStyleCompact), keyEquivalent: "")
+        compactItem.target = self
+        iconSubmenu.addItem(compactItem)
+
         iconStyleItem.submenu = iconSubmenu
         menu.addItem(iconStyleItem)
 
@@ -115,6 +119,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         updateMenuBarDisplay()
     }
 
+    @objc func setIconStyleCompact() {
+        settings.iconStyle = .compact
+        updateMenuBarDisplay()
+    }
+
     private func updateMenuBarDisplay() {
         guard let button = statusItem?.button else { return }
 
@@ -126,11 +135,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         var title = ""
 
+        // Compact mode: abbreviated format without arrows or intercardinals
+        if settings.iconStyle == .compact {
+            let unitAbbrev = abbreviatedUnit(unit)
+            if let s = speed {
+                title = "💨\(Int(s))\(unitAbbrev)"
+                if let g = gust {
+                    title += " G\(Int(g))\(unitAbbrev)"
+                }
+            } else {
+                title = "—"
+            }
+            button.title = title
+            return
+        }
+
         switch settings.iconStyle {
         case .windAndArrow, .arrowOnly:
             // Add wind direction arrow - arrow points FROM where wind is coming
             title += windArrow(for: direction) + " "
-        case .windOnly:
+        case .windOnly, .compact:
             break
         }
 
@@ -156,6 +180,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         button.title = title
+    }
+
+    private func abbreviatedUnit(_ unit: String) -> String {
+        switch unit {
+        case "km/h": return "k"
+        case "mph": return "M"
+        case "m/s": return "m"
+        case "knots": return "K"
+        default: return unit
+        }
     }
 
     private func windArrow(for degrees: Double?) -> String {

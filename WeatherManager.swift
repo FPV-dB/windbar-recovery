@@ -29,10 +29,6 @@ enum WindUnit: String, CaseIterable, Identifiable, Hashable, Codable {
 // 👉 DO NOT paste it anywhere else.
 // ----------------------------------
 
-@MainActor
-final class WeatherManager: NSObject, ObservableObject {
-    // (rest of your code…)
-}
 // MARK: - Wind Unit Enum
 
 // enum WindUnit: String, CaseIterable, Identifiable, Codable {

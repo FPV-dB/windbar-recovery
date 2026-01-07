@@ -87,26 +87,53 @@ final class WeatherManager: NSObject, ObservableObject {
     }
 
     @Published var windUnit: WindUnit = .kmh {
-        didSet { refresh() }
+        didSet {
+            UserDefaults.standard.set(windUnit.rawValue, forKey: "windUnit")
+            refresh()
+        }
     }
 
     @Published var locationMode: LocationMode = .cityName {
-        didSet { refresh() }
+        didSet {
+            UserDefaults.standard.set(locationMode.rawValue, forKey: "locationMode")
+            refresh()
+        }
     }
 
-    @Published var cityName: String = "Adelaide"
+    @Published var cityName: String = "Adelaide" {
+        didSet {
+            UserDefaults.standard.set(cityName, forKey: "cityName")
+        }
+    }
 
-    @Published var latitude: Double?
-    @Published var longitude: Double?
+    @Published var latitude: Double? {
+        didSet {
+            if let lat = latitude {
+                UserDefaults.standard.set(lat, forKey: "latitude")
+            }
+        }
+    }
+    @Published var longitude: Double? {
+        didSet {
+            if let lon = longitude {
+                UserDefaults.standard.set(lon, forKey: "longitude")
+            }
+        }
+    }
 
     @Published var selectedCountry: String = "Australia" {
         didSet {
+            UserDefaults.standard.set(selectedCountry, forKey: "selectedCountry")
             if let first = cityList[selectedCountry]?.first {
                 selectedCity = first
             }
         }
     }
-    @Published var selectedCity: String = "Adelaide"
+    @Published var selectedCity: String = "Adelaide" {
+        didSet {
+            UserDefaults.standard.set(selectedCity, forKey: "selectedCity")
+        }
+    }
 
     @Published var windSpeedKmh: Double?
     @Published var windGustKmh: Double?
@@ -154,6 +181,38 @@ final class WeatherManager: NSObject, ObservableObject {
     override init() {
         super.init()
         locationManager.delegate = self
+
+        // Load saved preferences
+        if let savedWindUnit = UserDefaults.standard.string(forKey: "windUnit"),
+           let unit = WindUnit(rawValue: savedWindUnit) {
+            windUnit = unit
+        }
+
+        if let savedLocationMode = UserDefaults.standard.string(forKey: "locationMode"),
+           let mode = LocationMode(rawValue: savedLocationMode) {
+            locationMode = mode
+        }
+
+        if let savedCity = UserDefaults.standard.string(forKey: "cityName") {
+            cityName = savedCity
+        }
+
+        if UserDefaults.standard.object(forKey: "latitude") != nil {
+            latitude = UserDefaults.standard.double(forKey: "latitude")
+        }
+
+        if UserDefaults.standard.object(forKey: "longitude") != nil {
+            longitude = UserDefaults.standard.double(forKey: "longitude")
+        }
+
+        if let savedCountry = UserDefaults.standard.string(forKey: "selectedCountry") {
+            selectedCountry = savedCountry
+        }
+
+        if let savedCity = UserDefaults.standard.string(forKey: "selectedCity") {
+            selectedCity = savedCity
+        }
+
         scheduleAutoRefresh()
     }
 

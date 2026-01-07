@@ -79,6 +79,7 @@ struct HourlyEntry: Identifiable {
     let windDirectionDeg: Double?
     let windDirectionCompass: String?
     let pressureHPa: Double?
+    let uvIndex: Double?
 }
 
 @MainActor
@@ -519,7 +520,8 @@ final class WeatherManager: NSObject, ObservableObject {
                 windGust: 16.6 + Double(i) * 0.8,
                 windDirectionDeg: 202.0,
                 windDirectionCompass: "SSW",
-                pressureHPa: 1009.0 - Double(i) * 0.5
+                pressureHPa: 1009.0 - Double(i) * 0.5,
+                uvIndex: max(0, 5.0 - Double(i) * 0.8)
             )
         }
 
@@ -559,7 +561,7 @@ final class WeatherManager: NSObject, ObservableObject {
                 URLQueryItem(name: "latitude", value: "\(finalLat)"),
                 URLQueryItem(name: "longitude", value: "\(finalLon)"),
                 URLQueryItem(name: "current", value: "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,uv_index"),
-                URLQueryItem(name: "hourly", value: "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure"),
+                URLQueryItem(name: "hourly", value: "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,uv_index"),
                 URLQueryItem(name: "forecast_days", value: "1"),
                 URLQueryItem(name: "timezone", value: "auto"),
                 URLQueryItem(name: "windspeed_unit", value: windUnit.rawValue)
@@ -615,7 +617,8 @@ final class WeatherManager: NSObject, ObservableObject {
                     windGust: h.wind_gusts_10m?[safe: i],
                     windDirectionDeg: h.wind_direction_10m?[safe: i],
                     windDirectionCompass: compassDirection(from: h.wind_direction_10m?[safe: i]),
-                    pressureHPa: h.surface_pressure?[safe: i]
+                    pressureHPa: h.surface_pressure?[safe: i],
+                    uvIndex: h.uv_index?[safe: i]
                 )
                 entries.append(entry)
             }
@@ -696,6 +699,7 @@ private struct OpenMeteoResponse: Decodable {
         let wind_gusts_10m: [Double]?
         let wind_direction_10m: [Double]?
         let surface_pressure: [Double]?
+        let uv_index: [Double]?
     }
 
     let current: Current

@@ -772,6 +772,42 @@ struct HourlyRow: View {
                     .fill(Color(NSColor.controlBackgroundColor).opacity(0.3))
             )
 
+            // Temperature and UV row
+            HStack(spacing: 12) {
+                Spacer()
+                    .frame(width: 16)
+                Spacer()
+                    .frame(width: 55)
+
+                // Temperature
+                if let temp = entry.tempC {
+                    HStack(spacing: 6) {
+                        Image(systemName: "thermometer.medium")
+                            .foregroundColor(.red)
+                            .font(.caption)
+                            .frame(width: 16)
+                        Text(settings.temperatureString(temp))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(width: 100, alignment: .leading)
+                }
+
+                // UV Index
+                if let uv = entry.uvIndex {
+                    HStack(spacing: 6) {
+                        Image(systemName: "sun.max.fill")
+                            .foregroundColor(.yellow)
+                            .font(.caption)
+                        Text(String(format: "UV %.1f", uv))
+                            .font(.caption)
+                            .foregroundColor(uvColor(uv))
+                    }
+                }
+            }
+            .padding(.horizontal, 10)
+            .padding(.bottom, 4)
+
             // Show knots if enabled
             if settings.showKnotsAlways && manager.windUnit != .knots {
                 HStack(spacing: 12) {
@@ -797,6 +833,16 @@ struct HourlyRow: View {
                 }
                 .padding(.leading, 10)
             }
+        }
+    }
+
+    private func uvColor(_ index: Double) -> Color {
+        switch index {
+        case 0..<3: return .green
+        case 3..<6: return .yellow
+        case 6..<8: return .orange
+        case 8..<11: return .red
+        default: return .purple
         }
     }
 }

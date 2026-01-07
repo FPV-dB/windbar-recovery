@@ -548,6 +548,26 @@ struct ExternalLinksSection: View {
             .sheet(isPresented: $showICAOList) {
                 AustralianICAOView()
             }
+
+            Divider()
+                .padding(.top, 8)
+
+            // Attribution
+            VStack(alignment: .leading, spacing: 4) {
+                Text("This app is free and distributable and the github source is available under the MIT license by db.")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                Button(action: {
+                    if let url = URL(string: "https://github.com/FPV-dB/windbar-recovery") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }) {
+                    Text("Copyleft db 2026 (https://github.com/FPV-dB/windbar-recovery)")
+                        .font(.caption2)
+                        .foregroundColor(.blue)
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 

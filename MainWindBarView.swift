@@ -515,10 +515,10 @@ struct ExternalLinksSection: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 LinkButton(title: "Open AIP", icon: "link", url: "https://www.airservicesaustralia.com/aip")
-                LinkButton(title: "Open NAIPS (NOTAMs/Briefing) — paid service", icon: "link", url: nil)
-                LinkButton(title: "Open CASA RPAS Gui...", icon: "link", url: nil)
-                LinkButton(title: "BOM Weather", icon: "link", url: nil)
-                LinkButton(title: "Weatherzone Radar", icon: "link", url: nil)
+                LinkButton(title: "Open NAIPS$ (NOTAMs/Briefing) — paid service", icon: "link", url: "https://www.airservicesaustralia.com/naips/Account/Logon")
+                LinkButton(title: "Open CASA RPAS Gui...", icon: "link", url: "https://www.casa.gov.au/drones")
+                LinkButton(title: "BOM Weather", icon: "link", url: "http://www.bom.gov.au")
+                LinkButton(title: "Weatherzone Radar", icon: "link", url: "https://www.weatherzone.com.au/radar")
             }
 
             Text("disclaimer: Airspace and NOTAMs change frequently. Always check official sources before flight.")
@@ -527,8 +527,8 @@ struct ExternalLinksSection: View {
                 .padding(.top, 4)
 
             HStack(spacing: 16) {
-                LinkButton(title: "ICAO Lookup", icon: "magnifyingglass", url: nil)
-                LinkButton(title: "FlightAware", icon: "airplane", url: nil)
+                LinkButton(title: "ICAO Lookup", icon: "magnifyingglass", url: "https://ourairports.com/")
+                LinkButton(title: "FlightAware", icon: "airplane", url: "https://www.flightaware.com")
             }
 
             // Pro Pilots Button

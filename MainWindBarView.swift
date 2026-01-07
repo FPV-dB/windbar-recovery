@@ -17,49 +17,76 @@ struct MainWindBarView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 24) {
 
                 // MARK: - Current Weather Section
                 CurrentWeatherSection()
                     .environmentObject(manager)
                     .environmentObject(settings)
-
-                Divider()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    )
 
                 // MARK: - Drone Safety Alert
                 DroneAlertSection()
                     .environmentObject(settings)
                     .environmentObject(manager)
-
-                Divider()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    )
 
                 // MARK: - Location Section
                 LocationSection()
                     .environmentObject(manager)
-
-                Divider()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    )
 
                 // MARK: - Display Settings
                 DisplaySection()
                     .environmentObject(manager)
                     .environmentObject(settings)
-
-                Divider()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    )
 
                 // MARK: - Next Hours
                 NextHoursSection()
                     .environmentObject(manager)
                     .environmentObject(settings)
-
-                Divider()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    )
 
                 // MARK: - External Links
                 ExternalLinksSection()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    )
 
             }
-            .padding()
+            .padding(16)
         }
         .frame(width: settings.windowWidth.width)
+        .background(Color(NSColor.windowBackgroundColor))
     }
 }
 
@@ -71,112 +98,153 @@ struct CurrentWeatherSection: View {
     @EnvironmentObject var settings: AppSettings
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 16) {
+
+            Text("Current Weather")
+                .font(.system(.title3, design: .rounded))
+                .fontWeight(.semibold)
 
             // Time and coordinates
-            if let updated = manager.lastUpdated {
-                HStack(spacing: 8) {
-                    Image(systemName: "clock")
-                        .foregroundColor(.secondary)
-                    Text(timeString(updated))
-                        .font(.system(.body, design: .monospaced))
-                }
-            }
-
-            if let lat = manager.latitude, let lon = manager.longitude {
-                HStack(spacing: 8) {
-                    Image(systemName: "location")
-                        .foregroundColor(.secondary)
-                    Text(String(format: "%.3f, %.3f", lat, lon))
-                        .font(.system(.body, design: .monospaced))
-                }
-            }
-
-            // Wind speed
-            if let speed = manager.windSpeedKmh {
-                HStack(spacing: 8) {
-                    Image(systemName: "wind")
-                        .foregroundColor(.secondary)
-                    Text(String(format: "%.1f", speed))
-                        .font(.system(.title, design: .rounded))
-                        .fontWeight(.semibold)
-                    Text(manager.windUnit.displayName)
-                        .font(.title3)
-                    if let compass = manager.windDirectionCompass {
-                        Text(compass)
-                            .font(.title3)
+            VStack(alignment: .leading, spacing: 6) {
+                if let updated = manager.lastUpdated {
+                    HStack(spacing: 10) {
+                        Image(systemName: "clock")
+                            .foregroundColor(.blue)
+                            .frame(width: 20)
+                        Text(timeString(updated))
+                            .font(.system(.body, design: .monospaced))
                             .foregroundColor(.secondary)
                     }
                 }
-                // Show knots if enabled
-                if settings.showKnotsAlways && manager.windUnit != .knots {
-                    HStack(spacing: 8) {
-                        Image(systemName: "wind")
-                            .foregroundColor(.clear)
-                        Text(String(format: "(%.1f knots)", settings.windSpeedInKnots(speed)))
-                            .font(.body)
+
+                if let lat = manager.latitude, let lon = manager.longitude {
+                    HStack(spacing: 10) {
+                        Image(systemName: "location.fill")
+                            .foregroundColor(.blue)
+                            .frame(width: 20)
+                        Text(String(format: "%.3f, %.3f", lat, lon))
+                            .font(.system(.body, design: .monospaced))
                             .foregroundColor(.secondary)
+                    }
+                }
+            }
+
+            Divider()
+
+            // Wind speed - Featured
+            if let speed = manager.windSpeedKmh {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "wind")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                            .frame(width: 28)
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                Text(String(format: "%.1f", speed))
+                                    .font(.system(.largeTitle, design: .rounded))
+                                    .fontWeight(.bold)
+                                Text(manager.windUnit.displayName)
+                                    .font(.title2)
+                                    .foregroundColor(.secondary)
+                                if let compass = manager.windDirectionCompass {
+                                    Text(compass)
+                                        .font(.title3)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            // Show knots if enabled
+                            if settings.showKnotsAlways && manager.windUnit != .knots {
+                                Text(String(format: "(%.1f knots)", settings.windSpeedInKnots(speed)))
+                                    .font(.callout)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     }
                 }
             }
 
             // Gusts
             if let gust = manager.windGustKmh, let compass = manager.windDirectionCompass {
-                HStack(spacing: 8) {
+                HStack(spacing: 12) {
                     Image(systemName: "wind.snow")
-                        .foregroundColor(.secondary)
-                    Text("Gusts")
-                        .foregroundColor(.secondary)
-                    if let deg = manager.windDirectionDeg {
-                        Text(windArrow(for: deg))
+                        .foregroundColor(.orange)
+                        .frame(width: 28)
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack(spacing: 8) {
+                            Text("Gusts")
+                                .font(.headline)
+                                .foregroundColor(.secondary)
+                            if let deg = manager.windDirectionDeg {
+                                Text(windArrow(for: deg))
+                                    .font(.title3)
+                            }
+                            Text(String(format: "%.1f %@ %@", gust, manager.windUnit.displayName, compass))
+                                .font(.headline)
+                        }
+                        // Show knots if enabled
+                        if settings.showKnotsAlways && manager.windUnit != .knots {
+                            Text(String(format: "(%.1f knots)", settings.windSpeedInKnots(gust)))
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+                        }
                     }
-                    Text(String(format: "%.1f %@ %@", gust, manager.windUnit.displayName, compass))
                 }
-                .font(.body)
-                // Show knots if enabled
-                if settings.showKnotsAlways && manager.windUnit != .knots {
-                    HStack(spacing: 8) {
-                        Image(systemName: "wind.snow")
-                            .foregroundColor(.clear)
-                        Text(String(format: "(%.1f knots)", settings.windSpeedInKnots(gust)))
-                            .font(.caption)
+            }
+
+            Divider()
+
+            // Additional weather data
+            VStack(alignment: .leading, spacing: 10) {
+                // Temperature
+                if let temp = manager.temperatureC {
+                    HStack(spacing: 12) {
+                        Image(systemName: "thermometer.medium")
+                            .foregroundColor(.red)
+                            .frame(width: 28)
+                        Text("Temperature")
                             .foregroundColor(.secondary)
+                            .frame(width: 100, alignment: .leading)
+                        Text(settings.temperatureString(temp))
+                            .fontWeight(.medium)
                     }
+                    .font(.body)
                 }
-            }
 
-            // Temperature
-            if let temp = manager.temperatureC {
-                HStack(spacing: 8) {
-                    Image(systemName: "thermometer")
-                        .foregroundColor(.secondary)
-                    Text(settings.temperatureString(temp))
+                // Pressure
+                if let pressure = manager.pressureHPa {
+                    HStack(spacing: 12) {
+                        Image(systemName: "barometer")
+                            .foregroundColor(.purple)
+                            .frame(width: 28)
+                        Text("Pressure")
+                            .foregroundColor(.secondary)
+                            .frame(width: 100, alignment: .leading)
+                        Text(settings.pressureString(pressure))
+                            .fontWeight(.medium)
+                    }
+                    .font(.body)
                 }
-                .font(.body)
-            }
 
-            // Pressure
-            if let pressure = manager.pressureHPa {
-                HStack(spacing: 8) {
-                    Image(systemName: "barometer")
-                        .foregroundColor(.secondary)
-                    Text("Pressure")
-                        .foregroundColor(.secondary)
-                    Text(settings.pressureString(pressure))
+                // UV Index
+                if let uv = manager.uvIndex {
+                    HStack(spacing: 12) {
+                        Image(systemName: "sun.max.fill")
+                            .foregroundColor(.yellow)
+                            .frame(width: 28)
+                        Text("UV Index")
+                            .foregroundColor(.secondary)
+                            .frame(width: 100, alignment: .leading)
+                        Text(String(format: "%.1f", uv))
+                            .fontWeight(.medium)
+                        Text("—")
+                            .foregroundColor(.secondary)
+                        Text(uvLevel(uv))
+                            .fontWeight(.medium)
+                            .foregroundColor(uvColor(uv))
+                    }
+                    .font(.body)
                 }
-                .font(.body)
-            }
-
-            // UV Index
-            if let uv = manager.uvIndex {
-                HStack(spacing: 8) {
-                    Image(systemName: "sun.max")
-                        .foregroundColor(.secondary)
-                    Text("UV Index")
-                        .foregroundColor(.secondary)
-                    Text(String(format: "%.1f — %@", uv, uvLevel(uv)))
-                }
-                .font(.body)
             }
         }
     }
@@ -194,6 +262,16 @@ struct CurrentWeatherSection: View {
         case 6..<8: return "High"
         case 8..<11: return "Very High"
         default: return "Extreme"
+        }
+    }
+
+    private func uvColor(_ index: Double) -> Color {
+        switch index {
+        case 0..<3: return .green
+        case 3..<6: return .yellow
+        case 6..<8: return .orange
+        case 8..<11: return .red
+        default: return .purple
         }
     }
 
@@ -224,25 +302,47 @@ struct DroneAlertSection: View {
     @EnvironmentObject var manager: WeatherManager
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Drone Safety Alert")
-                .font(.headline)
-
-            Toggle("Enable wind alerts", isOn: $settings.enableWindAlerts)
-
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text("Wind limit:")
-                TextField("Limit", value: $settings.customDroneWindLimit, format: .number)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 60)
-                Text("km/h")
+                Image(systemName: "bell.fill")
+                    .foregroundColor(.orange)
+                    .font(.title3)
+                Text("Drone Safety Alert")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.semibold)
+            }
+
+            Toggle(isOn: $settings.enableWindAlerts) {
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(settings.enableWindAlerts ? .orange : .secondary)
+                    Text("Enable wind alerts")
+                        .font(.body)
+                }
+            }
+            .toggleStyle(.switch)
+
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 10) {
+                    Text("Wind limit:")
+                        .foregroundColor(.secondary)
+                        .frame(width: 90, alignment: .leading)
+                    TextField("Limit", value: $settings.customDroneWindLimit, format: .number)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 70)
+                    Text("km/h")
+                        .foregroundColor(.secondary)
+                }
+
                 Text("(\(formattedWindLimit()))")
                     .foregroundColor(.secondary)
                     .font(.caption)
+                    .padding(.leading, 100)
             }
 
             HStack {
-                Text("Alert sound")
+                Text("Alert sound:")
+                    .foregroundColor(.secondary)
                 Spacer()
                 Picker("Alert sound", selection: $settings.alertSound) {
                     ForEach(AlertSound.allCases) { sound in
@@ -250,31 +350,53 @@ struct DroneAlertSection: View {
                     }
                 }
                 .labelsHidden()
-                .frame(width: 120)
+                .frame(width: 140)
             }
 
             // Show custom sound file picker when Custom is selected
             if settings.alertSound == .custom {
-                HStack {
-                    Text("Sound file:")
-                        .font(.caption)
-                    if !settings.customSoundPath.isEmpty {
-                        Text(customSoundFileName())
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                    } else {
-                        Text("None selected")
-                            .font(.caption)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "music.note")
+                            .foregroundColor(.blue)
+                            .frame(width: 20)
+                        Text("Sound file:")
+                            .font(.callout)
                             .foregroundColor(.secondary)
                     }
-                    Spacer()
-                    Button("Choose...") {
-                        selectCustomSound()
+
+                    HStack {
+                        if !settings.customSoundPath.isEmpty {
+                            Text(customSoundFileName())
+                                .font(.callout)
+                                .foregroundColor(.primary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(Color(NSColor.controlBackgroundColor).opacity(0.5))
+                                )
+                        } else {
+                            Text("None selected")
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+                                .italic()
+                        }
+                        Spacer()
+                        Button(action: {
+                            selectCustomSound()
+                        }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "folder")
+                                Text("Choose...")
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.bordered)
                 }
+                .padding(.top, 4)
             }
         }
     }
@@ -322,53 +444,80 @@ struct LocationSection: View {
     @EnvironmentObject var manager: WeatherManager
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Location")
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "map.fill")
+                    .foregroundColor(.green)
+                    .font(.title3)
+                Text("Location")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.semibold)
+            }
 
             // Mode picker
-            HStack {
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Mode")
-                Spacer()
+                    .foregroundColor(.secondary)
+                    .font(.callout)
                 Picker("Mode", selection: $manager.locationMode) {
                     Text("City").tag(LocationMode.cityName)
                     Text("Coords").tag(LocationMode.coordinates)
                     Text("World").tag(LocationMode.countryCity)
                 }
                 .pickerStyle(.segmented)
-                .frame(width: 240)
             }
 
             // Different inputs based on mode
-            switch manager.locationMode {
-            case .cityName:
-                TextField("City", text: $manager.cityName)
-                    .textFieldStyle(.roundedBorder)
-
-            case .coordinates:
-                HStack {
-                    Text("Lat")
-                    TextField("Latitude", value: $manager.latitude, format: .number)
-                        .textFieldStyle(.roundedBorder)
-                }
-
-                HStack {
-                    Text("Lon")
-                    TextField("Longitude", value: $manager.longitude, format: .number)
-                        .textFieldStyle(.roundedBorder)
-                }
-
-            case .countryCity:
-                Picker("Country", selection: $manager.selectedCountry) {
-                    ForEach(Array(manager.cityList.keys.sorted()), id: \.self) { country in
-                        Text("\(manager.flagEmoji(for: country)) \(country)")
-                            .tag(country)
+            VStack(alignment: .leading, spacing: 12) {
+                switch manager.locationMode {
+                case .cityName:
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("City name")
+                            .foregroundColor(.secondary)
+                            .font(.callout)
+                        TextField("Enter city name", text: $manager.cityName)
+                            .textFieldStyle(.roundedBorder)
                     }
-                }
 
-                Picker("City", selection: $manager.selectedCity) {
-                    ForEach(manager.cityList[manager.selectedCountry] ?? [], id: \.self) { city in
-                        Text(city).tag(city)
+                case .coordinates:
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 10) {
+                            Text("Lat")
+                                .foregroundColor(.secondary)
+                                .frame(width: 40, alignment: .leading)
+                            TextField("Latitude", value: $manager.latitude, format: .number)
+                                .textFieldStyle(.roundedBorder)
+                        }
+
+                        HStack(spacing: 10) {
+                            Text("Lon")
+                                .foregroundColor(.secondary)
+                                .frame(width: 40, alignment: .leading)
+                            TextField("Longitude", value: $manager.longitude, format: .number)
+                                .textFieldStyle(.roundedBorder)
+                        }
+                    }
+
+                case .countryCity:
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Country")
+                            .foregroundColor(.secondary)
+                            .font(.callout)
+                        Picker("Country", selection: $manager.selectedCountry) {
+                            ForEach(Array(manager.cityList.keys.sorted()), id: \.self) { country in
+                                Text("\(manager.flagEmoji(for: country)) \(country)")
+                                    .tag(country)
+                            }
+                        }
+
+                        Text("City")
+                            .foregroundColor(.secondary)
+                            .font(.callout)
+                        Picker("City", selection: $manager.selectedCity) {
+                            ForEach(manager.cityList[manager.selectedCountry] ?? [], id: \.self) { city in
+                                Text(city).tag(city)
+                            }
+                        }
                     }
                 }
             }
@@ -385,98 +534,134 @@ struct DisplaySection: View {
     @State private var showWindLimits = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Display")
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "paintbrush.fill")
+                    .foregroundColor(.blue)
+                    .font(.title3)
+                Text("Display")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.semibold)
+            }
 
             // Unit picker
-            HStack {
-                Text("Unit")
-                Spacer()
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Wind units")
+                    .foregroundColor(.secondary)
+                    .font(.callout)
                 Picker("Units", selection: $manager.windUnit) {
                     ForEach(WindUnit.allCases) { unit in
                         Text(unit.displayName).tag(unit)
                     }
                 }
                 .pickerStyle(.segmented)
-                .frame(width: 240)
             }
 
             // Temperature unit
-            HStack {
-                Spacer()
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Temperature")
+                    .foregroundColor(.secondary)
+                    .font(.callout)
                 Picker("Temperature", selection: $settings.temperatureUnit) {
                     ForEach(TemperatureUnit.allCases) { unit in
                         Text(unit.rawValue).tag(unit)
                     }
                 }
                 .pickerStyle(.segmented)
-                .frame(width: 120)
             }
 
             // Pressure unit
-            HStack {
-                Spacer()
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Pressure")
+                    .foregroundColor(.secondary)
+                    .font(.callout)
                 Picker("Pressure", selection: $settings.pressureUnit) {
                     ForEach(PressureUnit.allCases) { unit in
                         Text(unit.displayName).tag(unit)
                     }
                 }
                 .pickerStyle(.segmented)
-                .frame(width: 120)
             }
 
+            Divider()
+
             // Window width
-            HStack {
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Window width")
-                Spacer()
+                    .foregroundColor(.secondary)
+                    .font(.callout)
                 Picker("Window width", selection: $settings.windowWidth) {
                     ForEach(WindowWidth.allCases) { width in
                         Text(width.displayName).tag(width)
                     }
                 }
                 .pickerStyle(.segmented)
-                .frame(width: 240)
             }
 
-            // Recommended wind limits
-            Button(action: {
-                showWindLimits = true
-            }) {
-                HStack {
-                    Image(systemName: "info.circle")
-                    Text("Recommended wind limits")
+            Divider()
+
+            // Toggles
+            VStack(alignment: .leading, spacing: 12) {
+                Toggle(isOn: $settings.showKnotsAlways) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "wind")
+                            .foregroundColor(.blue)
+                        Text("Always show wind in knots")
+                    }
+                }
+                .toggleStyle(.switch)
+
+                Toggle(isOn: $manager.useDummyData) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "testtube.2")
+                            .foregroundColor(.purple)
+                        Text("Use dummy data")
+                    }
+                }
+                .toggleStyle(.switch)
+            }
+
+            Divider()
+
+            // Auto-refresh
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Auto-refresh")
+                    .foregroundColor(.secondary)
+                    .font(.callout)
+                HStack(spacing: 10) {
+                    TextField("Minutes", value: $manager.refreshIntervalMinutes, format: .number)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 70)
+                    Text("minutes")
+                        .foregroundColor(.secondary)
                 }
             }
-            .buttonStyle(.link)
+
+            // Action buttons
+            HStack(spacing: 12) {
+                Button(action: {
+                    manager.refresh()
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.clockwise")
+                        Text("Refresh now")
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+
+                Button(action: {
+                    showWindLimits = true
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "info.circle")
+                        Text("Wind limits")
+                    }
+                }
+                .buttonStyle(.bordered)
+            }
             .sheet(isPresented: $showWindLimits) {
                 DroneWindLimitsView()
                     .environmentObject(manager)
-            }
-
-            // Dummy data toggle
-            Toggle("Use dummy data", isOn: $manager.useDummyData)
-
-            // Show knots always toggle
-            Toggle("Always show wind in knots", isOn: $settings.showKnotsAlways)
-
-            // Auto-refresh
-            HStack {
-                Text("Auto-refresh:")
-                TextField("Minutes", value: $manager.refreshIntervalMinutes, format: .number)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 60)
-                Text("min")
-            }
-
-            // Refresh button
-            Button(action: {
-                manager.refresh()
-            }) {
-                HStack {
-                    Image(systemName: "arrow.clockwise")
-                    Text("Refresh now")
-                }
             }
         }
     }
@@ -489,16 +674,30 @@ struct NextHoursSection: View {
     @EnvironmentObject var manager: WeatherManager
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Next hours")
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "clock.fill")
+                    .foregroundColor(.indigo)
+                    .font(.title3)
+                Text("Hourly Forecast")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.semibold)
+            }
 
             if manager.hourlyForecast.isEmpty {
-                Text("No forecast data")
-                    .foregroundColor(.secondary)
+                HStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundColor(.orange)
+                    Text("No forecast data available")
+                        .foregroundColor(.secondary)
+                        .italic()
+                }
+                .padding(.vertical, 8)
             } else {
-                ForEach(manager.hourlyForecast) { entry in
-                    HourlyRow(entry: entry)
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(manager.hourlyForecast) { entry in
+                        HourlyRow(entry: entry)
+                    }
                 }
             }
         }
@@ -512,42 +711,62 @@ struct HourlyRow: View {
     let entry: HourlyEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 12) {
                 // Time
-                Image(systemName: "clock")
-                    .foregroundColor(.secondary)
-                    .frame(width: 16)
-                Text(entry.label)
-                    .font(.system(.body, design: .monospaced))
-                    .frame(width: 50, alignment: .leading)
-
-                // Wind icon
-                Image(systemName: "wind")
-                    .foregroundColor(.secondary)
-                    .frame(width: 16)
+                HStack(spacing: 8) {
+                    Image(systemName: "clock.fill")
+                        .foregroundColor(.indigo)
+                        .font(.caption)
+                        .frame(width: 16)
+                    Text(entry.label)
+                        .font(.system(.body, design: .monospaced))
+                        .fontWeight(.medium)
+                        .frame(width: 55, alignment: .leading)
+                }
 
                 // Wind speed
                 if let speed = entry.windSpeed {
-                    Text(String(format: "%.1f %@", speed, manager.windUnit.displayName))
-                        .frame(width: 80, alignment: .leading)
+                    HStack(spacing: 6) {
+                        Image(systemName: "wind")
+                            .foregroundColor(.blue)
+                            .font(.caption)
+                            .frame(width: 16)
+                        Text(String(format: "%.1f", speed))
+                            .fontWeight(.semibold)
+                        Text(manager.windUnit.displayName)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(width: 100, alignment: .leading)
                 }
 
                 // Gust
                 if let gust = entry.windGust, let compass = entry.windDirectionCompass {
-                    Text(String(format: "Gusts %.1f %@ %@", gust, manager.windUnit.displayName, compass))
+                    HStack(spacing: 6) {
+                        Image(systemName: "wind.snow")
+                            .foregroundColor(.orange)
+                            .font(.caption)
+                        Text(String(format: "%.1f %@ %@", gust, manager.windUnit.displayName, compass))
+                            .font(.callout)
+                    }
                 }
 
                 Spacer()
 
                 // Pressure
                 if let pressure = entry.pressureHPa {
-                    Text(String(format: "· %.0f hPa", pressure))
+                    Text(String(format: "%.0f hPa", pressure))
                         .foregroundColor(.secondary)
                         .font(.caption)
                 }
             }
             .font(.body)
+            .padding(.vertical, 6)
+            .padding(.horizontal, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(NSColor.controlBackgroundColor).opacity(0.3))
+            )
 
             // Show knots if enabled
             if settings.showKnotsAlways && manager.windUnit != .knots {
@@ -555,7 +774,7 @@ struct HourlyRow: View {
                     Spacer()
                         .frame(width: 16)
                     Spacer()
-                        .frame(width: 50)
+                        .frame(width: 55)
                     Spacer()
                         .frame(width: 16)
 
@@ -563,7 +782,7 @@ struct HourlyRow: View {
                         Text(String(format: "(%.1f knots", settings.convertToKnots(speed, from: manager.windUnit)))
                             .font(.caption)
                             .foregroundColor(.secondary)
-                            .frame(width: 80, alignment: .leading)
+                            .frame(width: 100, alignment: .leading)
                     }
 
                     if let gust = entry.windGust {
@@ -572,6 +791,7 @@ struct HourlyRow: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                .padding(.leading, 10)
             }
         }
     }
@@ -586,67 +806,90 @@ struct ExternalLinksSection: View {
     @State private var showICAOList = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("External links")
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "link.circle.fill")
+                    .foregroundColor(.teal)
+                    .font(.title3)
+                Text("External Links")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.semibold)
+            }
 
-            Text("note: External sources")
+            Text("External weather sources")
                 .font(.caption)
                 .foregroundColor(.secondary)
 
-            HStack(spacing: 16) {
-                LinkButton(title: "Open in The Weather Channel", icon: "link") {
-                    openWeatherChannel()
-                }
+            HStack(spacing: 12) {
                 Button(action: {
-                    showICAOList = true
+                    openWeatherChannel()
                 }) {
-                    HStack {
-                        Image(systemName: "list.bullet")
-                        Text("Australian ICAO List")
+                    HStack(spacing: 6) {
+                        Image(systemName: "globe")
+                        Text("Weather Channel")
                             .lineLimit(1)
                     }
                 }
-                .buttonStyle(.link)
+                .buttonStyle(.bordered)
+
+                Button(action: {
+                    showICAOList = true
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "list.bullet")
+                        Text("ICAO List")
+                            .lineLimit(1)
+                    }
+                }
+                .buttonStyle(.bordered)
             }
 
-            Text("Australian Airspace - official sources")
-                .font(.headline)
-                .padding(.top, 8)
+            Divider()
 
-            Text("note: Official external sources")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Australian Airspace - Official Sources")
+                    .font(.headline)
+
+                Text("Official external sources")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    LinkButton(title: "Open AIP", icon: "doc.text", url: "https://www.airservicesaustralia.com/aip")
+                    LinkButton(title: "Open NAIPS$ (NOTAMs/Briefing) — paid service", icon: "doc.text", url: "https://www.airservicesaustralia.com/naips/Account/Logon")
+                    LinkButton(title: "Open CASA RPAS Gui...", icon: "doc.text", url: "https://www.casa.gov.au/drones")
+                    LinkButton(title: "BOM Weather", icon: "cloud.sun", url: "http://www.bom.gov.au")
+                    LinkButton(title: "Weatherzone Radar", icon: "waveform.path.ecg", url: "https://www.weatherzone.com.au/radar")
+                }
+
+                Text("Airspace and NOTAMs change frequently. Always check official sources before flight.")
+                    .font(.caption)
+                    .foregroundColor(.orange)
+                    .padding(.top, 4)
+            }
+
+            Divider()
 
             VStack(alignment: .leading, spacing: 8) {
-                LinkButton(title: "Open AIP", icon: "link", url: "https://www.airservicesaustralia.com/aip")
-                LinkButton(title: "Open NAIPS$ (NOTAMs/Briefing) — paid service", icon: "link", url: "https://www.airservicesaustralia.com/naips/Account/Logon")
-                LinkButton(title: "Open CASA RPAS Gui...", icon: "link", url: "https://www.casa.gov.au/drones")
-                LinkButton(title: "BOM Weather", icon: "link", url: "http://www.bom.gov.au")
-                LinkButton(title: "Weatherzone Radar", icon: "link", url: "https://www.weatherzone.com.au/radar")
-            }
+                Text("Aviation Resources")
+                    .font(.headline)
 
-            Text("disclaimer: Airspace and NOTAMs change frequently. Always check official sources before flight.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .padding(.top, 4)
-
-            HStack(spacing: 16) {
-                LinkButton(title: "ICAO Lookup", icon: "magnifyingglass", url: "https://ourairports.com/")
-                LinkButton(title: "FlightAware", icon: "airplane", url: "https://www.flightaware.com")
-            }
-
-            // Pro Pilots Button
-            Button(action: {
-                showProPilots = true
-            }) {
-                HStack {
-                    Image(systemName: "play.circle")
-                    Text("Pro pilots I recommend")
+                HStack(spacing: 12) {
+                    LinkButton(title: "ICAO Lookup", icon: "magnifyingglass", url: "https://ourairports.com/")
+                    LinkButton(title: "FlightAware", icon: "airplane", url: "https://www.flightaware.com")
                 }
+
+                Button(action: {
+                    showProPilots = true
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "play.circle.fill")
+                        Text("Pro pilots I recommend")
+                    }
+                }
+                .buttonStyle(.link)
+                .padding(.top, 4)
             }
-            .buttonStyle(.link)
-            .padding(.top, 8)
             .sheet(isPresented: $showProPilots) {
                 ProPilotsView()
             }
@@ -655,23 +898,37 @@ struct ExternalLinksSection: View {
             }
 
             Divider()
-                .padding(.top, 8)
 
             // Attribution
-            VStack(alignment: .leading, spacing: 4) {
-                Text("This app is free and distributable and the github source is available under the MIT license by db.")
-                    .font(.caption2)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    Image(systemName: "info.circle")
+                        .foregroundColor(.blue)
+                    Text("About")
+                        .font(.headline)
+                }
+
+                Text("This app is free and distributable. The source is available under the MIT license.")
+                    .font(.caption)
                     .foregroundColor(.secondary)
+
                 Button(action: {
                     if let url = URL(string: "https://github.com/FPV-dB/windbar-recovery") {
                         NSWorkspace.shared.open(url)
                     }
                 }) {
-                    Text("MIT License Open-Source by db 2026 (https://github.com/FPV-dB/windbar-recovery)")
-                        .font(.caption2)
-                        .foregroundColor(.blue)
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left.forwardslash.chevron.right")
+                            .font(.caption)
+                        Text("View on GitHub")
+                    }
+                    .font(.caption)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.link)
+
+                Text("MIT License © 2026 db")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
             }
         }
     }
@@ -722,11 +979,13 @@ struct LinkButton: View {
                 NSWorkspace.shared.open(url)
             }
         }) {
-            HStack {
+            HStack(spacing: 6) {
                 Image(systemName: icon)
+                    .font(.caption)
                 Text(title)
                     .lineLimit(1)
             }
+            .font(.callout)
         }
         .buttonStyle(.link)
     }

@@ -617,6 +617,9 @@ struct DisplaySection: View {
                         Image(systemName: "testtube.2")
                             .foregroundColor(.purple)
                         Text("Use dummy data")
+                        Text("(dev use only)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
                 .toggleStyle(.switch)

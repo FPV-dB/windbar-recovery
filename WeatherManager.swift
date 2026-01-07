@@ -75,7 +75,10 @@ struct HourlyEntry: Identifiable {
     let label: String    // e.g. "14:00"
     let tempC: Double?
     let windSpeed: Double?
+    let windGust: Double?
     let windDirectionDeg: Double?
+    let windDirectionCompass: String?
+    let pressureHPa: Double?
 }
 
 @MainActor
@@ -110,8 +113,12 @@ final class WeatherManager: NSObject, ObservableObject {
     @Published var selectedCity: String = "Adelaide"
 
     @Published var windSpeedKmh: Double?
+    @Published var windGustKmh: Double?
     @Published var windDirectionDeg: Double?
+    @Published var windDirectionCompass: String?
     @Published var temperatureC: Double?
+    @Published var pressureHPa: Double?
+    @Published var uvIndex: Double?
     @Published var lastUpdated: Date?
 
     @Published var isLoading: Bool = false
@@ -208,18 +215,26 @@ final class WeatherManager: NSObject, ObservableObject {
         isLoading = false
         errorMessage = nil
 
-        windSpeedKmh = 18.0
-        windDirectionDeg = 230.0
-        temperatureC = 23.0
+        windSpeedKmh = 8.8
+        windGustKmh = 16.6
+        windDirectionDeg = 202.0
+        windDirectionCompass = "SSW"
+        temperatureC = 24.0
+        pressureHPa = 1009.0
+        uvIndex = 0.0
         lastUpdated = Date()
 
         // simple fake hourly
         hourlyForecast = (0..<6).map { i in
+            let hour = (Calendar.current.component(.hour, from: Date()) + i) % 24
             HourlyEntry(
-                label: String(format: "%02d:00", (Calendar.current.component(.hour, from: Date()) + i) % 24),
-                tempC: 23.0 + Double(i),
-                windSpeed: 18.0 + Double(i),
-                windDirectionDeg: 230.0
+                label: String(format: "%02d:00", hour),
+                tempC: 24.0 + Double(i) * 0.5,
+                windSpeed: 8.8 + Double(i) * 1.5,
+                windGust: 16.6 + Double(i) * 0.8,
+                windDirectionDeg: 202.0,
+                windDirectionCompass: "SSW",
+                pressureHPa: 1009.0 - Double(i) * 0.5
             )
         }
 
@@ -258,8 +273,8 @@ final class WeatherManager: NSObject, ObservableObject {
             comps.queryItems = [
                 URLQueryItem(name: "latitude", value: "\(finalLat)"),
                 URLQueryItem(name: "longitude", value: "\(finalLon)"),
-                URLQueryItem(name: "current", value: "temperature_2m,wind_speed_10m,wind_direction_10m"),
-                URLQueryItem(name: "hourly", value: "temperature_2m,wind_speed_10m,wind_direction_10m"),
+                URLQueryItem(name: "current", value: "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,uv_index"),
+                URLQueryItem(name: "hourly", value: "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure"),
                 URLQueryItem(name: "forecast_days", value: "1"),
                 URLQueryItem(name: "timezone", value: "auto"),
                 URLQueryItem(name: "windspeed_unit", value: windUnit.rawValue)
@@ -286,8 +301,12 @@ final class WeatherManager: NSObject, ObservableObject {
     private func apply(openMeteo: OpenMeteoResponse) {
         let current = openMeteo.current
         windSpeedKmh = current.wind_speed_10m
+        windGustKmh = current.wind_gusts_10m
         windDirectionDeg = current.wind_direction_10m
+        windDirectionCompass = compassDirection(from: current.wind_direction_10m)
         temperatureC = current.temperature_2m
+        pressureHPa = current.surface_pressure
+        uvIndex = current.uv_index
         lastUpdated = Date()
 
         // Hourly conversion (next ~6 points)
@@ -308,7 +327,10 @@ final class WeatherManager: NSObject, ObservableObject {
                     label: label,
                     tempC: h.temperature_2m?[safe: i],
                     windSpeed: h.wind_speed_10m?[safe: i],
-                    windDirectionDeg: h.wind_direction_10m?[safe: i]
+                    windGust: h.wind_gusts_10m?[safe: i],
+                    windDirectionDeg: h.wind_direction_10m?[safe: i],
+                    windDirectionCompass: compassDirection(from: h.wind_direction_10m?[safe: i]),
+                    pressureHPa: h.surface_pressure?[safe: i]
                 )
                 entries.append(entry)
             }
@@ -318,6 +340,14 @@ final class WeatherManager: NSObject, ObservableObject {
         }
 
         updateMenuBarSpeed()
+    }
+
+    private func compassDirection(from degrees: Double?) -> String? {
+        guard let deg = degrees else { return nil }
+        let directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                         "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        let index = Int((deg + 11.25) / 22.5) % 16
+        return directions[index]
     }
 
     private func updateMenuBarSpeed() {
@@ -369,13 +399,18 @@ private struct OpenMeteoResponse: Decodable {
     struct Current: Decodable {
         let temperature_2m: Double?
         let wind_speed_10m: Double?
+        let wind_gusts_10m: Double?
         let wind_direction_10m: Double?
+        let surface_pressure: Double?
+        let uv_index: Double?
     }
     struct Hourly: Decodable {
         let time: [String]
         let temperature_2m: [Double]?
         let wind_speed_10m: [Double]?
+        let wind_gusts_10m: [Double]?
         let wind_direction_10m: [Double]?
+        let surface_pressure: [Double]?
     }
 
     let current: Current

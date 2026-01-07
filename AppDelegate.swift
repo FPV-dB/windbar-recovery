@@ -6,7 +6,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var statusItem: NSStatusItem?
     let manager = WeatherManager()
-    var popover: NSPopover?
+    let settings = AppSettings()
+    var mainWindow: NSWindow?
     var cancellables = Set<AnyCancellable>()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -15,35 +16,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem?.button?.title = "—"
 
-        // --- Build the popover content ---
-        let view = WindBarView(onClose: { [weak self] in
-            self?.popover?.performClose(nil)
-        })
-        .environmentObject(manager)
+        // --- Create menu ---
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Open WindBar", action: #selector(openMainWindow), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
 
-        let hosting = NSHostingController(rootView: view)
+        let iconStyleItem = NSMenuItem(title: "Icon Style", action: nil, keyEquivalent: "")
+        let iconSubmenu = NSMenu()
+        iconSubmenu.addItem(NSMenuItem(title: "Wind + Arrow", action: #selector(setIconStyleWindAndArrow), keyEquivalent: ""))
+        iconSubmenu.addItem(NSMenuItem(title: "Arrow Only", action: #selector(setIconStyleArrowOnly), keyEquivalent: ""))
+        iconSubmenu.addItem(NSMenuItem(title: "Wind Only", action: #selector(setIconStyleWindOnly), keyEquivalent: ""))
+        iconStyleItem.submenu = iconSubmenu
+        menu.addItem(iconStyleItem)
 
-        let pop = NSPopover()
-        pop.behavior = .transient
-        pop.contentSize = NSSize(width: 260, height: 260)
-        pop.contentViewController = hosting
-        self.popover = pop
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Quit WindBar", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
-        // --- Menu bar icon click handler ---
-        statusItem?.button?.target = self
-        statusItem?.button?.action = #selector(togglePopover)
+        statusItem?.menu = menu
 
         // --- Update the menu bar title whenever wind changes ---
         manager.$windSpeedKmh
             .receive(on: RunLoop.main)
             .sink { [weak self] speed in
-                guard let button = self?.statusItem?.button else { return }
+                self?.updateMenuBarDisplay()
+            }
+            .store(in: &cancellables)
 
-                if let speed = speed {
-                    button.title = "\(Int(speed)) km/h"
-                } else {
-                    button.title = "—"
-                }
+        manager.$windGustKmh
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.updateMenuBarDisplay()
             }
             .store(in: &cancellables)
 
@@ -51,15 +53,78 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         manager.refresh()
     }
 
-    @objc func togglePopover() {
+    @objc func openMainWindow() {
+        if let window = mainWindow {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let contentView = MainWindBarView()
+            .environmentObject(manager)
+            .environmentObject(settings)
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: settings.windowWidth.width, height: 600),
+            styleMask: [.titled, .closable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "WindBar"
+        window.contentView = NSHostingView(rootView: contentView)
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        window.isReleasedWhenClosed = false
+
+        self.mainWindow = window
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc func setIconStyleWindAndArrow() {
+        settings.iconStyle = .windAndArrow
+        updateMenuBarDisplay()
+    }
+
+    @objc func setIconStyleArrowOnly() {
+        settings.iconStyle = .arrowOnly
+        updateMenuBarDisplay()
+    }
+
+    @objc func setIconStyleWindOnly() {
+        settings.iconStyle = .windOnly
+        updateMenuBarDisplay()
+    }
+
+    private func updateMenuBarDisplay() {
         guard let button = statusItem?.button else { return }
 
-        if let pop = popover, pop.isShown {
-            pop.performClose(nil)
-        } else {
-            popover?.show(relativeTo: button.bounds,
-                          of: button,
-                          preferredEdge: .minY)
+        let speed = manager.windSpeedKmh
+        let gust = manager.windGustKmh
+        let unit = manager.windUnit.displayName
+
+        var title = ""
+
+        switch settings.iconStyle {
+        case .windAndArrow, .arrowOnly:
+            // Add wind direction arrow (placeholder for now)
+            title += "↓ "
+        case .windOnly:
+            break
         }
+
+        if let s = speed {
+            title += "\(Int(s)) \(unit)"
+            if let g = gust {
+                title += " — Gusts to \(Int(g)) \(unit)"
+            }
+        } else {
+            title += "—"
+        }
+
+        if settings.iconStyle == .arrowOnly {
+            title = "↓ "
+        }
+
+        button.title = title
     }
 }

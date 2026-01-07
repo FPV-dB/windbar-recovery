@@ -9,6 +9,7 @@
 
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 
 struct MainWindBarView: View {
 

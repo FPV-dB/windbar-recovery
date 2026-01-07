@@ -540,7 +540,7 @@ struct ExternalLinksSection: View {
                         NSWorkspace.shared.open(url)
                     }
                 }) {
-                    Text("Copyleft db 2026 (https://github.com/FPV-dB/windbar-recovery)")
+                    Text("MIT License Open-Source by db 2026 (https://github.com/FPV-dB/windbar-recovery)")
                         .font(.caption2)
                         .foregroundColor(.blue)
                 }

@@ -153,7 +153,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var title = ""
 
         // Check if wind exceeds custom limit and alerts are enabled
-        let alertIcon = ""
         if settings.enableWindAlerts, let s = speed {
             // Convert speed to km/h for comparison
             let speedKmh = s

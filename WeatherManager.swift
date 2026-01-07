@@ -170,12 +170,32 @@ final class WeatherManager: NSObject, ObservableObject {
 
     // Countries + cities
     let cityList: [String: [String]] = [
-        "Australia": ["Adelaide","Melbourne","Sydney","Perth","Brisbane","Hobart","Darwin","Canberra"],
-        "USA": ["New York","Los Angeles","Chicago","San Francisco","Seattle","Miami","Houston","Dallas","Boston","Denver"],
-        "UK": ["London","Manchester","Liverpool","Birmingham","Edinburgh","Glasgow","Bristol"],
-        "Canada": ["Toronto","Vancouver","Montreal","Calgary","Ottawa","Edmonton"],
-        "Germany": ["Berlin","Hamburg","Munich","Frankfurt","Cologne"],
-        "France": ["Paris","Lyon","Marseille","Nice","Bordeaux"]
+        "Australia": ["Adelaide","Melbourne","Sydney","Perth","Brisbane","Hobart","Darwin","Canberra","Gold Coast","Newcastle","Wollongong","Cairns","Townsville","Geelong"],
+        "New Zealand": ["Auckland","Wellington","Christchurch","Hamilton","Tauranga","Dunedin","Queenstown","Rotorua"],
+        "USA": ["New York","Los Angeles","Chicago","San Francisco","Seattle","Miami","Houston","Dallas","Boston","Denver","Atlanta","Phoenix","Philadelphia","Portland","Austin","Las Vegas"],
+        "UK": ["London","Manchester","Liverpool","Birmingham","Edinburgh","Glasgow","Bristol","Leeds","Sheffield","Cardiff","Belfast","Newcastle"],
+        "Canada": ["Toronto","Vancouver","Montreal","Calgary","Ottawa","Edmonton","Winnipeg","Quebec City","Halifax","Victoria"],
+        "Germany": ["Berlin","Hamburg","Munich","Frankfurt","Cologne","Stuttgart","Düsseldorf","Dortmund","Leipzig"],
+        "France": ["Paris","Lyon","Marseille","Nice","Bordeaux","Toulouse","Strasbourg","Nantes","Lille"],
+        "Japan": ["Tokyo","Osaka","Kyoto","Nagoya","Sapporo","Fukuoka","Yokohama","Kobe","Hiroshima"],
+        "Spain": ["Madrid","Barcelona","Valencia","Seville","Bilbao","Málaga","Granada","Alicante"],
+        "Italy": ["Rome","Milan","Naples","Turin","Florence","Venice","Bologna","Palermo"],
+        "Netherlands": ["Amsterdam","Rotterdam","The Hague","Utrecht","Eindhoven","Groningen","Maastricht"],
+        "Switzerland": ["Zurich","Geneva","Basel","Bern","Lausanne","Lucerne","Interlaken"],
+        "Norway": ["Oslo","Bergen","Trondheim","Stavanger","Tromsø","Kristiansand"],
+        "Sweden": ["Stockholm","Gothenburg","Malmö","Uppsala","Västerås","Örebro"],
+        "Denmark": ["Copenhagen","Aarhus","Odense","Aalborg","Esbjerg"],
+        "Ireland": ["Dublin","Cork","Galway","Limerick","Waterford"],
+        "South Korea": ["Seoul","Busan","Incheon","Daegu","Daejeon","Gwangju"],
+        "China": ["Beijing","Shanghai","Guangzhou","Shenzhen","Chengdu","Hong Kong","Hangzhou","Xi'an"],
+        "Singapore": ["Singapore"],
+        "Thailand": ["Bangkok","Chiang Mai","Phuket","Pattaya","Krabi"],
+        "India": ["Mumbai","Delhi","Bangalore","Hyderabad","Chennai","Kolkata","Pune","Ahmedabad"],
+        "UAE": ["Dubai","Abu Dhabi","Sharjah","Ajman"],
+        "South Africa": ["Cape Town","Johannesburg","Durban","Pretoria","Port Elizabeth"],
+        "Brazil": ["São Paulo","Rio de Janeiro","Brasília","Salvador","Fortaleza","Belo Horizonte"],
+        "Argentina": ["Buenos Aires","Córdoba","Rosario","Mendoza","Mar del Plata"],
+        "Mexico": ["Mexico City","Guadalajara","Monterrey","Cancún","Tijuana","Puebla"]
     ]
 
     override init() {
@@ -240,13 +260,33 @@ final class WeatherManager: NSObject, ObservableObject {
 
     func flagEmoji(for country: String) -> String {
         switch country {
-        case "Australia": return "🇦🇺"
-        case "USA":       return "🇺🇸"
-        case "UK":        return "🇬🇧"
-        case "Canada":    return "🇨🇦"
-        case "Germany":   return "🇩🇪"
-        case "France":    return "🇫🇷"
-        default:          return ""
+        case "Australia":    return "🇦🇺"
+        case "New Zealand":  return "🇳🇿"
+        case "USA":          return "🇺🇸"
+        case "UK":           return "🇬🇧"
+        case "Canada":       return "🇨🇦"
+        case "Germany":      return "🇩🇪"
+        case "France":       return "🇫🇷"
+        case "Japan":        return "🇯🇵"
+        case "Spain":        return "🇪🇸"
+        case "Italy":        return "🇮🇹"
+        case "Netherlands":  return "🇳🇱"
+        case "Switzerland":  return "🇨🇭"
+        case "Norway":       return "🇳🇴"
+        case "Sweden":       return "🇸🇪"
+        case "Denmark":      return "🇩🇰"
+        case "Ireland":      return "🇮🇪"
+        case "South Korea":  return "🇰🇷"
+        case "China":        return "🇨🇳"
+        case "Singapore":    return "🇸🇬"
+        case "Thailand":     return "🇹🇭"
+        case "India":        return "🇮🇳"
+        case "UAE":          return "🇦🇪"
+        case "South Africa": return "🇿🇦"
+        case "Brazil":       return "🇧🇷"
+        case "Argentina":    return "🇦🇷"
+        case "Mexico":       return "🇲🇽"
+        default:             return ""
         }
     }
 

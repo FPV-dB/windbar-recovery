@@ -151,18 +151,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         var title = ""
 
+        // Check if wind exceeds custom limit and alerts are enabled
+        let alertIcon = ""
+        if settings.enableWindAlerts, let s = speed {
+            // Convert speed to km/h for comparison
+            let speedKmh = s
+            if speedKmh > settings.customDroneWindLimit {
+                title += "🔔 "
+            }
+        }
+
         // Compact mode: abbreviated format without arrows or intercardinals
         if settings.iconStyle == .compact {
             let unitAbbrev = abbreviatedUnit(unit)
             if let s = speed {
-                title = "💨\(Int(s))\(unitAbbrev)"
+                title += "💨\(Int(s))\(unitAbbrev)"
                 if let g = gust {
                     title += " G\(Int(g))\(unitAbbrev)"
                 }
             } else {
-                title = "—"
+                title += "—"
             }
-            button.title = title
+            button.title = limitMenuBarText(title)
             return
         }
 
@@ -195,7 +205,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             title = windArrow(for: direction) + " "
         }
 
-        button.title = title
+        button.title = limitMenuBarText(title)
+    }
+
+    private func limitMenuBarText(_ text: String) -> String {
+        // Limit menu bar text to reasonable length (about 50 characters)
+        let maxLength = 50
+        if text.count > maxLength {
+            let index = text.index(text.startIndex, offsetBy: maxLength - 1)
+            return String(text[..<index]) + "…"
+        }
+        return text
     }
 
     private func abbreviatedUnit(_ unit: String) -> String {

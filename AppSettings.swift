@@ -102,6 +102,7 @@ class AppSettings: ObservableObject {
         didSet { alertSoundRaw = alertSound.rawValue }
     }
     @AppStorage("windAlertThreshold") var windAlertThreshold: Double = 25.0
+    @AppStorage("customDroneWindLimit") var customDroneWindLimit: Double = 25.0
 
     // Display preferences
     @AppStorage("temperatureUnit") private var temperatureUnitRaw: String = TemperatureUnit.celsius.rawValue

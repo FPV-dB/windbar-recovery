@@ -28,6 +28,7 @@ struct MainWindBarView: View {
                 // MARK: - Drone Safety Alert
                 DroneAlertSection()
                     .environmentObject(settings)
+                    .environmentObject(manager)
 
                 Divider()
 
@@ -219,6 +220,7 @@ struct CurrentWeatherSection: View {
 struct DroneAlertSection: View {
 
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var manager: WeatherManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -226,6 +228,17 @@ struct DroneAlertSection: View {
                 .font(.headline)
 
             Toggle("Enable wind alerts", isOn: $settings.enableWindAlerts)
+
+            HStack {
+                Text("Wind limit:")
+                TextField("Limit", value: $settings.customDroneWindLimit, format: .number)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 60)
+                Text("km/h")
+                Text("(\(formattedWindLimit()))")
+                    .foregroundColor(.secondary)
+                    .font(.caption)
+            }
 
             HStack {
                 Text("Alert sound")
@@ -239,6 +252,24 @@ struct DroneAlertSection: View {
                 .frame(width: 120)
             }
         }
+    }
+
+    private func formattedWindLimit() -> String {
+        let converted: Double
+        let unit = manager.windUnit.displayName
+
+        switch manager.windUnit {
+        case .kmh:
+            converted = settings.customDroneWindLimit
+        case .mph:
+            converted = settings.customDroneWindLimit * 0.621371
+        case .ms:
+            converted = settings.customDroneWindLimit / 3.6
+        case .knots:
+            converted = settings.customDroneWindLimit * 0.539957
+        }
+
+        return String(format: "%.0f %@", converted, unit)
     }
 }
 

@@ -104,17 +104,6 @@ struct CurrentWeatherSection: View {
                 }
             }
 
-            // Trend (placeholder for now)
-            HStack(spacing: 8) {
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundColor(.secondary)
-                Text("Trend:")
-                    .foregroundColor(.secondary)
-                Image(systemName: "arrow.right")
-                Text("Steady (20 min)")
-            }
-            .font(.body)
-
             // Gusts
             if let gust = manager.windGustKmh, let compass = manager.windDirectionCompass {
                 HStack(spacing: 8) {
@@ -151,17 +140,6 @@ struct CurrentWeatherSection: View {
                 }
                 .font(.body)
             }
-
-            // Pressure trend (placeholder)
-            HStack(spacing: 8) {
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundColor(.secondary)
-                Text("Pressure trend:")
-                    .foregroundColor(.secondary)
-                Image(systemName: "arrow.right")
-                Text("Steady (20 min)")
-            }
-            .font(.caption)
 
             // UV Index
             if let uv = manager.uvIndex {

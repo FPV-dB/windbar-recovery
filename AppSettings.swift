@@ -82,15 +82,52 @@ enum AlertSound: String, CaseIterable, Identifiable, Codable {
 @MainActor
 class AppSettings: ObservableObject {
 
-    @Published var iconStyle: IconStyle = .windAndArrow
-    @Published var windowWidth: WindowWidth = .wide
-    @Published var enableWindAlerts: Bool = false
-    @Published var alertSound: AlertSound = .ping
-    @Published var windAlertThreshold: Double = 25.0 // in current wind unit
+    @AppStorage("iconStyle") private var iconStyleRaw: String = IconStyle.windAndArrow.rawValue
+    @Published var iconStyle: IconStyle = .windAndArrow {
+        didSet { iconStyleRaw = iconStyle.rawValue }
+    }
+
+    @AppStorage("windowWidth") private var windowWidthRaw: String = WindowWidth.wide.rawValue
+    @Published var windowWidth: WindowWidth = .wide {
+        didSet { windowWidthRaw = windowWidth.rawValue }
+    }
+
+    @AppStorage("enableWindAlerts") var enableWindAlerts: Bool = false
+    @AppStorage("alertSound") private var alertSoundRaw: String = AlertSound.ping.rawValue
+    @Published var alertSound: AlertSound = .ping {
+        didSet { alertSoundRaw = alertSound.rawValue }
+    }
+    @AppStorage("windAlertThreshold") var windAlertThreshold: Double = 25.0
 
     // Display preferences
-    @Published var temperatureUnit: TemperatureUnit = .celsius
-    @Published var pressureUnit: PressureUnit = .hPa
+    @AppStorage("temperatureUnit") private var temperatureUnitRaw: String = TemperatureUnit.celsius.rawValue
+    @Published var temperatureUnit: TemperatureUnit = .celsius {
+        didSet { temperatureUnitRaw = temperatureUnit.rawValue }
+    }
+
+    @AppStorage("pressureUnit") private var pressureUnitRaw: String = PressureUnit.hPa.rawValue
+    @Published var pressureUnit: PressureUnit = .hPa {
+        didSet { pressureUnitRaw = pressureUnit.rawValue }
+    }
+
+    // Load saved values on init
+    init() {
+        if let saved = IconStyle(rawValue: iconStyleRaw) {
+            iconStyle = saved
+        }
+        if let saved = WindowWidth(rawValue: windowWidthRaw) {
+            windowWidth = saved
+        }
+        if let saved = AlertSound(rawValue: alertSoundRaw) {
+            alertSound = saved
+        }
+        if let saved = TemperatureUnit(rawValue: temperatureUnitRaw) {
+            temperatureUnit = saved
+        }
+        if let saved = PressureUnit(rawValue: pressureUnitRaw) {
+            pressureUnit = saved
+        }
+    }
 
     // Convert temperature
     func convertTemperature(_ celsius: Double?) -> Double? {

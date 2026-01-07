@@ -73,6 +73,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             .store(in: &cancellables)
 
+        manager.$windDirectionCompass
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.updateMenuBarDisplay()
+            }
+            .store(in: &cancellables)
+
         // --- Kick off first fetch ---
         manager.refresh()
     }

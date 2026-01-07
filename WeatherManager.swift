@@ -228,7 +228,67 @@ final class WeatherManager: NSObject, ObservableObject {
         "Saudi Arabia": ["Riyadh","Jeddah","Mecca","Medina"],
         "Pakistan": ["Karachi","Lahore","Islamabad","Peshawar"],
         "Bangladesh": ["Dhaka","Chittagong","Sylhet"],
-        "Sri Lanka": ["Colombo","Kandy","Galle","Jaffna"]
+        "Sri Lanka": ["Colombo","Kandy","Galle","Jaffna"],
+        "Algeria": ["Algiers","Oran","Constantine","Annaba"],
+        "Tunisia": ["Tunis","Sfax","Sousse","Bizerte"],
+        "Libya": ["Tripoli","Benghazi","Misrata"],
+        "Ethiopia": ["Addis Ababa","Dire Dawa","Mekelle","Bahir Dar"],
+        "Tanzania": ["Dar es Salaam","Dodoma","Arusha","Mwanza","Zanzibar"],
+        "Uganda": ["Kampala","Entebbe","Jinja","Mbarara"],
+        "Ghana": ["Accra","Kumasi","Tamale","Cape Coast"],
+        "Senegal": ["Dakar","Thiès","Saint-Louis","Touba"],
+        "Ivory Coast": ["Abidjan","Yamoussoukro","Bouaké","San-Pédro"],
+        "Zimbabwe": ["Harare","Bulawayo","Mutare","Gweru"],
+        "Zambia": ["Lusaka","Kitwe","Ndola","Livingstone"],
+        "Botswana": ["Gaborone","Francistown","Maun","Kasane"],
+        "Namibia": ["Windhoek","Swakopmund","Walvis Bay","Oshakati"],
+        "Mozambique": ["Maputo","Beira","Nampula","Matola"],
+        "Madagascar": ["Antananarivo","Toamasina","Antsirabe","Mahajanga"],
+        "Mauritius": ["Port Louis","Curepipe","Quatre Bornes","Flic en Flac"],
+        "Seychelles": ["Victoria","Anse Royale","Beau Vallon"],
+        "Réunion": ["Saint-Denis","Saint-Paul","Saint-Pierre","Le Tampon"],
+        "Antarctica": ["McMurdo Station","Palmer Station","Rothera Station","Casey Station","Davis Station","Mawson Station","Scott Base","Vostok Station"],
+        "Greenland": ["Nuuk","Ilulissat","Sisimiut","Qaqortoq","Kangerlussuaq"],
+        "Svalbard": ["Longyearbyen","Ny-Ålesund","Barentsburg"],
+        "Faroe Islands": ["Tórshavn","Klaksvík","Runavík"],
+        "Jordan": ["Amman","Petra","Aqaba","Jerash","Dead Sea"],
+        "Lebanon": ["Beirut","Tripoli","Sidon","Byblos"],
+        "Oman": ["Muscat","Salalah","Sohar","Nizwa"],
+        "Kuwait": ["Kuwait City","Hawally","Salmiya","Jahra"],
+        "Bahrain": ["Manama","Muharraq","Riffa","Hamad Town"],
+        "Azerbaijan": ["Baku","Ganja","Sumqayit","Lankaran"],
+        "Kazakhstan": ["Almaty","Nur-Sultan","Shymkent","Karaganda"],
+        "Uzbekistan": ["Tashkent","Samarkand","Bukhara","Khiva"],
+        "Mongolia": ["Ulaanbaatar","Erdenet","Darkhan","Choir"],
+        "Nepal": ["Kathmandu","Pokhara","Lalitpur","Bhaktapur"],
+        "Bhutan": ["Thimphu","Paro","Punakha","Phuentsholing"],
+        "Myanmar": ["Yangon","Mandalay","Naypyidaw","Bagan"],
+        "Cambodia": ["Phnom Penh","Siem Reap","Battambang","Sihanoukville"],
+        "Laos": ["Vientiane","Luang Prabang","Pakse","Savannakhet"],
+        "Fiji": ["Suva","Nadi","Lautoka","Labasa"],
+        "Papua New Guinea": ["Port Moresby","Lae","Madang","Mount Hagen"],
+        "New Caledonia": ["Nouméa","Mont-Dore","Dumbéa"],
+        "French Polynesia": ["Papeete","Bora Bora","Moorea","Tahiti"],
+        "Guam": ["Hagåtña","Dededo","Tamuning","Mangilao"],
+        "Samoa": ["Apia","Vaitele","Faleula"],
+        "Tonga": ["Nuku'alofa","Neiafu","Haveluloto"],
+        "Maldives": ["Malé","Addu City","Fuvahmulah"],
+        "Jamaica": ["Kingston","Montego Bay","Spanish Town","Ocho Rios"],
+        "Barbados": ["Bridgetown","Speightstown","Oistins"],
+        "Trinidad and Tobago": ["Port of Spain","San Fernando","Chaguanas","Arima"],
+        "Bahamas": ["Nassau","Freeport","Marsh Harbour"],
+        "Cayman Islands": ["George Town","West Bay","Bodden Town"],
+        "Bermuda": ["Hamilton","St. George's","Somerset"],
+        "Aruba": ["Oranjestad","San Nicolaas","Santa Cruz"],
+        "Curaçao": ["Willemstad","Punda","Otrobanda"],
+        "Ecuador": ["Quito","Guayaquil","Cuenca","Galápagos"],
+        "Bolivia": ["La Paz","Santa Cruz","Cochabamba","Sucre"],
+        "Paraguay": ["Asunción","Ciudad del Este","Encarnación"],
+        "Uruguay": ["Montevideo","Punta del Este","Colonia","Salto"],
+        "Venezuela": ["Caracas","Maracaibo","Valencia","Barquisimeto"],
+        "Guyana": ["Georgetown","Linden","New Amsterdam"],
+        "Suriname": ["Paramaribo","Lelydorp","Nieuw Nickerie"],
+        "French Guiana": ["Cayenne","Saint-Laurent-du-Maroni","Kourou"]
     ]
 
     override init() {
@@ -349,10 +409,70 @@ final class WeatherManager: NSObject, ObservableObject {
         case "Panama":          return "🇵🇦"
         case "Qatar":           return "🇶🇦"
         case "Saudi Arabia":    return "🇸🇦"
-        case "Pakistan":        return "🇵🇰"
-        case "Bangladesh":      return "🇧🇩"
-        case "Sri Lanka":       return "🇱🇰"
-        default:                return ""
+        case "Pakistan":            return "🇵🇰"
+        case "Bangladesh":          return "🇧🇩"
+        case "Sri Lanka":           return "🇱🇰"
+        case "Algeria":             return "🇩🇿"
+        case "Tunisia":             return "🇹🇳"
+        case "Libya":               return "🇱🇾"
+        case "Ethiopia":            return "🇪🇹"
+        case "Tanzania":            return "🇹🇿"
+        case "Uganda":              return "🇺🇬"
+        case "Ghana":               return "🇬🇭"
+        case "Senegal":             return "🇸🇳"
+        case "Ivory Coast":         return "🇨🇮"
+        case "Zimbabwe":            return "🇿🇼"
+        case "Zambia":              return "🇿🇲"
+        case "Botswana":            return "🇧🇼"
+        case "Namibia":             return "🇳🇦"
+        case "Mozambique":          return "🇲🇿"
+        case "Madagascar":          return "🇲🇬"
+        case "Mauritius":           return "🇲🇺"
+        case "Seychelles":          return "🇸🇨"
+        case "Réunion":             return "🇷🇪"
+        case "Antarctica":          return "🇦🇶"
+        case "Greenland":           return "🇬🇱"
+        case "Svalbard":            return "🇸🇯"
+        case "Faroe Islands":       return "🇫🇴"
+        case "Jordan":              return "🇯🇴"
+        case "Lebanon":             return "🇱🇧"
+        case "Oman":                return "🇴🇲"
+        case "Kuwait":              return "🇰🇼"
+        case "Bahrain":             return "🇧🇭"
+        case "Azerbaijan":          return "🇦🇿"
+        case "Kazakhstan":          return "🇰🇿"
+        case "Uzbekistan":          return "🇺🇿"
+        case "Mongolia":            return "🇲🇳"
+        case "Nepal":               return "🇳🇵"
+        case "Bhutan":              return "🇧🇹"
+        case "Myanmar":             return "🇲🇲"
+        case "Cambodia":            return "🇰🇭"
+        case "Laos":                return "🇱🇦"
+        case "Fiji":                return "🇫🇯"
+        case "Papua New Guinea":    return "🇵🇬"
+        case "New Caledonia":       return "🇳🇨"
+        case "French Polynesia":    return "🇵🇫"
+        case "Guam":                return "🇬🇺"
+        case "Samoa":               return "🇼🇸"
+        case "Tonga":               return "🇹🇴"
+        case "Maldives":            return "🇲🇻"
+        case "Jamaica":             return "🇯🇲"
+        case "Barbados":            return "🇧🇧"
+        case "Trinidad and Tobago": return "🇹🇹"
+        case "Bahamas":             return "🇧🇸"
+        case "Cayman Islands":      return "🇰🇾"
+        case "Bermuda":             return "🇧🇲"
+        case "Aruba":               return "🇦🇼"
+        case "Curaçao":             return "🇨🇼"
+        case "Ecuador":             return "🇪🇨"
+        case "Bolivia":             return "🇧🇴"
+        case "Paraguay":            return "🇵🇾"
+        case "Uruguay":             return "🇺🇾"
+        case "Venezuela":           return "🇻🇪"
+        case "Guyana":              return "🇬🇾"
+        case "Suriname":            return "🇸🇷"
+        case "French Guiana":       return "🇬🇫"
+        default:                    return ""
         }
     }
 

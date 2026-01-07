@@ -10,6 +10,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import AppKit
 
 // MARK: - Icon Style
 
@@ -76,6 +77,7 @@ enum AlertSound: String, CaseIterable, Identifiable, Codable {
     case pop = "Pop"
     case hero = "Hero"
     case submarine = "Submarine"
+    case custom = "Custom"
     case none = "None"
 
     var id: String { rawValue }
@@ -103,6 +105,7 @@ class AppSettings: ObservableObject {
     }
     @AppStorage("windAlertThreshold") var windAlertThreshold: Double = 25.0
     @AppStorage("customDroneWindLimit") var customDroneWindLimit: Double = 25.0
+    @AppStorage("customSoundPath") var customSoundPath: String = ""
 
     // Display preferences
     @AppStorage("temperatureUnit") private var temperatureUnitRaw: String = TemperatureUnit.celsius.rawValue
@@ -183,5 +186,22 @@ class AppSettings: ObservableObject {
             return speed  // Already in knots
         }
         return kmh * 0.539957
+    }
+
+    // Play alert sound
+    func playAlertSound() {
+        guard alertSound != .none else { return }
+
+        if alertSound == .custom {
+            // Play custom sound file
+            if !customSoundPath.isEmpty {
+                if let sound = NSSound(contentsOfFile: customSoundPath, byReference: true) {
+                    sound.play()
+                }
+            }
+        } else {
+            // Play system sound
+            NSSound(named: NSSound.Name(alertSound.rawValue.lowercased()))?.play()
+        }
     }
 }

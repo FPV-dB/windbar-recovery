@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let settings = AppSettings()
     var mainWindow: NSWindow?
     var cancellables = Set<AnyCancellable>()
+    var isAlertActive = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
 
@@ -158,6 +159,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let speedKmh = s
             if speedKmh > settings.customDroneWindLimit {
                 title += "🔔 "
+                // Play alert sound when wind first exceeds limit
+                if !isAlertActive {
+                    isAlertActive = true
+                    settings.playAlertSound()
+                }
+            } else {
+                // Reset alert when wind drops below limit
+                isAlertActive = false
             }
         }
 

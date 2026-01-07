@@ -8,6 +8,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct MainWindBarView: View {
 
@@ -251,6 +252,47 @@ struct DroneAlertSection: View {
                 .labelsHidden()
                 .frame(width: 120)
             }
+
+            // Show custom sound file picker when Custom is selected
+            if settings.alertSound == .custom {
+                HStack {
+                    Text("Sound file:")
+                        .font(.caption)
+                    if !settings.customSoundPath.isEmpty {
+                        Text(customSoundFileName())
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                    } else {
+                        Text("None selected")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Button("Choose...") {
+                        selectCustomSound()
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+        }
+    }
+
+    private func customSoundFileName() -> String {
+        let url = URL(fileURLWithPath: settings.customSoundPath)
+        return url.lastPathComponent
+    }
+
+    private func selectCustomSound() {
+        let panel = NSOpenPanel()
+        panel.title = "Select Custom Alert Sound"
+        panel.allowedContentTypes = [.audio]
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+
+        if panel.runModal() == .OK, let url = panel.url {
+            settings.customSoundPath = url.path
         }
     }
 

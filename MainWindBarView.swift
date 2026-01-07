@@ -96,6 +96,11 @@ struct CurrentWeatherSection: View {
                         .fontWeight(.semibold)
                     Text(manager.windUnit.displayName)
                         .font(.title3)
+                    if let compass = manager.windDirectionCompass {
+                        Text(compass)
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
 
@@ -117,6 +122,9 @@ struct CurrentWeatherSection: View {
                         .foregroundColor(.secondary)
                     Text("Gusts")
                         .foregroundColor(.secondary)
+                    if let deg = manager.windDirectionDeg {
+                        Text(windArrow(for: deg))
+                    }
                     Text(String(format: "%.1f %@ %@", gust, manager.windUnit.displayName, compass))
                 }
                 .font(.body)
@@ -182,6 +190,24 @@ struct CurrentWeatherSection: View {
         case 6..<8: return "High"
         case 8..<11: return "Very High"
         default: return "Extreme"
+        }
+    }
+
+    private func windArrow(for degrees: Double) -> String {
+        // Wind direction: arrow points in the direction the wind is FROM
+        // Meteorological convention: 0° = North wind (from North)
+        let normalized = Int(degrees) % 360
+
+        switch normalized {
+        case 337...360, 0..<23:   return "↑"  // N
+        case 23..<68:             return "↗"  // NE
+        case 68..<113:            return "→"  // E
+        case 113..<158:           return "↘"  // SE
+        case 158..<203:           return "↓"  // S
+        case 203..<248:           return "↙"  // SW
+        case 248..<293:           return "←"  // W
+        case 293..<338:           return "↖"  // NW
+        default:                  return "↑"
         }
     }
 }
